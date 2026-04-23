@@ -16,7 +16,7 @@ npm -v
 
 ## Install
 
-From `C:\OPT prep\website\portfolio`, run:
+From `C:\OPT prep\website\Portfolio\Portfolio`, run:
 
 ```bash
 npm install
@@ -72,5 +72,4 @@ You can also replace the project descriptions, stats, and skill lists in the sam
 
 ## Notes
 
-- The older `next-monorepo/` folder is still present as a reference, but the active app is the root project.
 - The root project has already been verified with `npm run typecheck` and `npm run build`.

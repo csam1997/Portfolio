@@ -12,16 +12,13 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
-  AtSign,
   Bug,
   Camera,
   ChevronDown,
-  Code2,
   ExternalLink,
   FileSearch,
   FolderGit2,
   Gamepad2,
-  Link,
   Link2,
   Lock,
   Mail,
@@ -58,13 +55,6 @@ type Project = {
   live?: string;
   tags: string[];
   title: string;
-};
-
-type SocialLink = {
-  href: string;
-  icon: LucideIcon;
-  label: string;
-  value: string;
 };
 
 type Credential = {
@@ -408,27 +398,6 @@ const OFF_SCREEN: BentoMediaItem[] = [
     url: '/off-screen/travelling.jpg',
     mediaClassName: 'bg-black/30 object-contain p-2 sm:p-3',
     span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2',
-  },
-];
-
-const SOCIALS: SocialLink[] = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'your.email@example.com',
-    href: 'mailto:your.email@example.com',
-  },
-  {
-    icon: Link,
-    label: 'LinkedIn',
-    value: 'linkedin.com/in/your-name',
-    href: 'https://linkedin.com/in/your-name',
-  },
-  {
-    icon: FolderGit2,
-    label: 'GitHub',
-    value: 'github.com/your-name',
-    href: 'https://github.com/your-name',
   },
 ];
 
