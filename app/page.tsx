@@ -174,7 +174,7 @@ const SKILL_GROUPS: SkillGroup[] = [
 const PROJECTS: Project[] = [
   {
     icon: Lock,
-    title: 'SecureVault CLI',
+    title: 'TrusLex',
     description:
       'A Python toolkit for vulnerability scanning, CVE mapping, and PDF security reporting with a clean command-line workflow.',
     tags: ['Python', 'Nmap', 'Security', 'Reporting'],
@@ -182,7 +182,7 @@ const PROJECTS: Project[] = [
   },
   {
     icon: Activity,
-    title: 'AutoQA Framework',
+    title: 'Meals-on-Wheels',
     description:
       'An end-to-end automation framework built for parallel execution, visual regression checks, and reliable CI pipelines.',
     tags: ['Playwright', 'TypeScript', 'CI/CD', 'Docker'],
@@ -190,18 +190,10 @@ const PROJECTS: Project[] = [
   },
   {
     icon: FileSearch,
-    title: 'ThreatMapper Dashboard',
+    title: 'Voyager',
     description:
       'A network monitoring dashboard that highlights unusual traffic patterns and supports faster security triage.',
     tags: ['Python', 'React', 'Wireshark', 'WebSockets'],
-    color: 'purple',
-  },
-  {
-    icon: Terminal,
-    title: 'APIGuard',
-    description:
-      'A focused API security tester that checks authentication, injection paths, and rate limiting against common OWASP risks.',
-    tags: ['Python', 'FastAPI', 'OWASP', 'Postman'],
     color: 'purple',
   },
 ];

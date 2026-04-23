@@ -4,3 +4,7 @@ out
 coverage
 *.log
 *.tsbuildinfo
+.open-next
+.wrangler
+.dev.vars*
+!.dev.vars.example

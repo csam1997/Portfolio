@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDirectory = path.dirname(currentFile);
@@ -11,5 +12,7 @@ const nextConfig = {
     root: currentDirectory,
   },
 };
+
+initOpenNextCloudflareForDev();
 
 export default nextConfig;
