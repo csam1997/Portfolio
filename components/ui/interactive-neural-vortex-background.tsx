@@ -21,6 +21,13 @@ export default function InteractiveNeuralVortexBackground() {
       return;
     }
 
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const frameInterval = prefersReducedMotion ? 1000 / 24 : 1000 / 45;
+    let lastFrameTime = 0;
+
     const vertexShaderSource = `
       precision mediump float;
       attribute vec2 a_position;
@@ -50,7 +57,7 @@ export default function InteractiveNeuralVortexBackground() {
         vec2 result = vec2(0.0);
         float scale = 8.0;
 
-        for (int index = 0; index < 15; index++) {
+        for (int index = 0; index < 12; index++) {
           uv = rotate(uv, 1.0);
           sineAccumulator = rotate(sineAccumulator, 1.0);
 
@@ -158,7 +165,8 @@ export default function InteractiveNeuralVortexBackground() {
     const scrollLocation = context.getUniformLocation(program, 'u_scroll_progress');
 
     const resizeCanvas = () => {
-      const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const pixelRatioCap = coarsePointer || prefersReducedMotion ? 1 : 1.5;
+      const devicePixelRatio = Math.min(window.devicePixelRatio || 1, pixelRatioCap);
       canvas.width = window.innerWidth * devicePixelRatio;
       canvas.height = window.innerHeight * devicePixelRatio;
       context.viewport(0, 0, canvas.width, canvas.height);
@@ -168,12 +176,18 @@ export default function InteractiveNeuralVortexBackground() {
       }
     };
 
-    const render = () => {
+    const render = (timestamp: number) => {
+      if (timestamp - lastFrameTime < frameInterval) {
+        animationRef.current = window.requestAnimationFrame(render);
+        return;
+      }
+
+      lastFrameTime = timestamp;
       pointer.current.x += (pointer.current.targetX - pointer.current.x) * 0.2;
       pointer.current.y += (pointer.current.targetY - pointer.current.y) * 0.2;
 
       if (timeLocation) {
-        context.uniform1f(timeLocation, performance.now());
+        context.uniform1f(timeLocation, timestamp);
       }
 
       if (pointerLocation) {
@@ -211,16 +225,20 @@ export default function InteractiveNeuralVortexBackground() {
     };
 
     resizeCanvas();
-    render();
+    animationRef.current = window.requestAnimationFrame(render);
 
     window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('touchmove', handleTouchMove);
+    if (!prefersReducedMotion) {
+      window.addEventListener('pointermove', handlePointerMove, { passive: true });
+      window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    }
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('touchmove', handleTouchMove);
+      if (!prefersReducedMotion) {
+        window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('touchmove', handleTouchMove);
+      }
 
       if (animationRef.current !== null) {
         window.cancelAnimationFrame(animationRef.current);

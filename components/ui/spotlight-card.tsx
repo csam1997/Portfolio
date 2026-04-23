@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 
 type GlowColor = 'blue' | 'green' | 'orange' | 'purple' | 'red';
@@ -38,6 +38,29 @@ function toCssLength(value: number | string | undefined) {
   return typeof value === 'number' ? `${value}px` : value;
 }
 
+let activeGlowCards = 0;
+let removeGlobalPointerSync: (() => void) | null = null;
+
+function ensureGlobalPointerSync() {
+  if (typeof document === 'undefined' || removeGlobalPointerSync) {
+    return;
+  }
+
+  const root = document.documentElement;
+  const syncPointer = (event: PointerEvent) => {
+    const { clientX, clientY } = event;
+    root.style.setProperty('--x', clientX.toFixed(2));
+    root.style.setProperty('--xp', (clientX / window.innerWidth).toFixed(2));
+    root.style.setProperty('--y', clientY.toFixed(2));
+    root.style.setProperty('--yp', (clientY / window.innerHeight).toFixed(2));
+  };
+
+  document.addEventListener('pointermove', syncPointer, { passive: true });
+  removeGlobalPointerSync = () => {
+    document.removeEventListener('pointermove', syncPointer);
+  };
+}
+
 export function GlowCard({
   children,
   className = '',
@@ -47,25 +70,17 @@ export function GlowCard({
   size = 'md',
   width,
 }: GlowCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const syncPointer = (event: PointerEvent) => {
-      const current = cardRef.current;
-      if (!current) {
-        return;
-      }
+    activeGlowCards += 1;
+    ensureGlobalPointerSync();
 
-      const { clientX, clientY } = event;
-      current.style.setProperty('--x', clientX.toFixed(2));
-      current.style.setProperty('--xp', (clientX / window.innerWidth).toFixed(2));
-      current.style.setProperty('--y', clientY.toFixed(2));
-      current.style.setProperty('--yp', (clientY / window.innerHeight).toFixed(2));
-    };
-
-    document.addEventListener('pointermove', syncPointer);
     return () => {
-      document.removeEventListener('pointermove', syncPointer);
+      activeGlowCards -= 1;
+
+      if (activeGlowCards === 0 && removeGlobalPointerSync) {
+        removeGlobalPointerSync();
+        removeGlobalPointerSync = null;
+      }
     };
   }, []);
 
@@ -104,7 +119,6 @@ export function GlowCard({
 
   return (
     <div
-      ref={cardRef}
       data-glow
       style={style}
       className={`${sizeClasses} ${customSize ? '' : 'aspect-[3/4]'} relative grid grid-rows-[1fr_auto] gap-4 rounded-2xl p-4 shadow-[0_1rem_2rem_-1rem_black] backdrop-blur-[5px] ${className}`}
