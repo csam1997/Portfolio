@@ -517,7 +517,7 @@ function Navbar() {
 
         <button
           type="button"
-          className="text-white/70 transition-colors hover:text-white md:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:text-white md:hidden"
           onClick={() => setIsOpen((current) => !current)}
           aria-expanded={isOpen}
           aria-label="Toggle menu"
@@ -761,7 +761,7 @@ function CredentialBadge({
 }: Pick<Credential, 'badge' | 'badgeStyle'>) {
   if (badgeStyle === 'azure') {
     return (
-      <div className="flex h-22 w-22 shrink-0 items-center justify-center rounded-[1.75rem] border border-cyan-500/25 bg-cyan-500/8">
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-cyan-500/25 bg-cyan-500/8 sm:h-22 sm:w-22">
         <div className="grid grid-cols-2 gap-1">
           <span className="h-6 w-6 bg-[#f25022]" />
           <span className="h-6 w-6 bg-[#7fba00]" />
@@ -774,14 +774,14 @@ function CredentialBadge({
 
   if (badgeStyle === 'green') {
     return (
-      <div className="flex h-22 w-22 shrink-0 items-center justify-center rounded-[1.75rem] border border-emerald-500/30 bg-emerald-500/8 px-3 text-center text-2xl font-semibold text-emerald-300">
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-emerald-500/30 bg-emerald-500/8 px-3 text-center text-2xl font-semibold text-emerald-300 sm:h-22 sm:w-22">
         {badge}
       </div>
     );
   }
 
   return (
-    <div className="flex h-22 w-22 shrink-0 items-center justify-center rounded-[1.75rem] border border-amber-500/30 bg-amber-500/8 px-3 text-center text-2xl font-semibold text-amber-300">
+    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-amber-500/30 bg-amber-500/8 px-3 text-center text-2xl font-semibold text-amber-300 sm:h-22 sm:w-22">
       {badge}
     </div>
   );
@@ -810,17 +810,17 @@ function Credentials() {
                 glowColor="purple"
                 className="w-full !aspect-auto rounded-[2rem] p-8"
               >
-                <div className="relative z-10 flex items-center gap-6">
+                <div className="relative z-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
                   <CredentialBadge
                     badge={credential.badge}
                     badgeStyle={credential.badgeStyle}
                   />
 
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <h3 className="text-2xl font-semibold leading-tight text-white md:text-3xl">
+                  <div className="flex min-w-0 flex-col gap-2 text-left">
+                    <h3 className="text-xl font-semibold leading-tight text-white sm:text-2xl md:text-3xl">
                       {credential.title}
                     </h3>
-                    <p className="text-base leading-relaxed text-white/42">
+                    <p className="text-sm leading-relaxed text-white/42 sm:text-base">
                       {credential.level ? `${credential.level} · ` : ''}
                       {credential.issuer}
                       {credential.status ? ' · ' : ''}

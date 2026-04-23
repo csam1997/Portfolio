@@ -97,7 +97,6 @@ export function GlowCard({
     border: 'var(--border-size) solid var(--backup-border)',
     height: toCssLength(height),
     position: 'relative',
-    touchAction: 'none',
     width: toCssLength(width),
   } as CSSProperties;
 
