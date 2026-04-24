@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import Image from 'next/image';
 
 export interface BentoMediaItem {
   desc: string;
@@ -123,14 +124,20 @@ function MediaItem({ item, className = '', onClick }: MediaItemProps) {
   }
 
   return (
-    <img
-      src={item.url}
-      alt={item.title}
-      className={`cursor-pointer object-cover ${className} ${item.mediaClassName ?? ''}`}
+    <div
+      className={`relative ${className} ${onClick ? 'cursor-pointer' : ''} ${
+        item.mediaClassName ?? ''
+      }`}
       onClick={onClick}
-      loading="lazy"
-      decoding="async"
-    />
+    >
+      <Image
+        src={item.url}
+        alt={item.title}
+        fill
+        sizes="(max-width: 639px) 100vw, (max-width: 767px) 50vw, 25vw"
+        className="object-cover"
+      />
+    </div>
   );
 }
 
@@ -291,7 +298,7 @@ export default function InteractiveBentoGallery({
   const [selectedItem, setSelectedItem] = useState<BentoMediaItem | null>(null);
 
   return (
-      <div className="mx-auto w-full max-w-4xl">
+    <div className="mx-auto w-full max-w-4xl">
       {title || description ? (
         <div className="mb-8 text-center">
           {title ? (
@@ -327,106 +334,111 @@ export default function InteractiveBentoGallery({
             mediaItems={items}
           />
         ) : (
-            <motion.div
-              className="grid grid-cols-1 auto-rows-[84px] gap-3 sm:grid-cols-3 sm:auto-rows-[88px] md:grid-cols-4 md:auto-rows-[92px]"
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.08 },
-              },
-            }}
+          <div
+            className="grid grid-cols-1 auto-rows-[84px] gap-3 sm:grid-cols-3 sm:auto-rows-[88px] md:grid-cols-4 md:auto-rows-[92px]"
           >
-            {items.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layoutId={`media-${item.id}`}
-                className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] ${
-                  enableInteractions ? 'cursor-move' : 'cursor-default'
-                } ${item.span}`}
-                onClick={() => {
-                  if (enableInteractions && !isDragging) {
-                    setSelectedItem(item);
-                  }
-                }}
-                variants={{
-                  hidden: { opacity: 0, y: 40, scale: 0.94 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    transition: {
-                      type: 'spring',
-                      stiffness: 350,
-                      damping: 25,
-                      delay: index * 0.04,
+            {items.map((item, index) =>
+              enableInteractions ? (
+                <motion.div
+                  key={item.id}
+                  layoutId={`media-${item.id}`}
+                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] cursor-move ${item.span}`}
+                  onClick={() => {
+                    if (!isDragging) {
+                      setSelectedItem(item);
+                    }
+                  }}
+                  variants={{
+                    hidden: { opacity: 0, y: 40, scale: 0.94 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: {
+                        type: 'spring',
+                        stiffness: 350,
+                        damping: 25,
+                        delay: index * 0.04,
+                      },
                     },
-                  },
-                }}
-                whileHover={{ scale: 1.02 }}
-                drag={enableInteractions}
-                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                dragElastic={1}
-                onDragStart={() => {
-                  if (enableInteractions) {
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  whileHover={{ scale: 1.02 }}
+                  drag
+                  dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                  dragElastic={1}
+                  onDragStart={() => {
                     setIsDragging(true);
-                  }
-                }}
-                onDragEnd={(_, info) => {
-                  if (!enableInteractions) {
-                    return;
-                  }
+                  }}
+                  onDragEnd={(_, info) => {
+                    setIsDragging(false);
+                    const moveDistance = info.offset.x + info.offset.y;
 
-                  setIsDragging(false);
-                  const moveDistance = info.offset.x + info.offset.y;
+                    if (Math.abs(moveDistance) <= 50) {
+                      return;
+                    }
 
-                  if (Math.abs(moveDistance) <= 50) {
-                    return;
-                  }
+                    const nextItems = [...items];
+                    const draggedItem = nextItems[index];
+                    const targetIndex =
+                      moveDistance > 0
+                        ? Math.min(index + 1, items.length - 1)
+                        : Math.max(index - 1, 0);
 
-                  const nextItems = [...items];
-                  const draggedItem = nextItems[index];
-                  const targetIndex =
-                    moveDistance > 0
-                      ? Math.min(index + 1, items.length - 1)
-                      : Math.max(index - 1, 0);
-
-                  nextItems.splice(index, 1);
-                  nextItems.splice(targetIndex, 0, draggedItem);
-                  setItems(nextItems);
-                }}
-              >
-                <div className="relative h-full w-full overflow-hidden rounded-[1.1rem]">
-                  <MediaItem
-                    item={item}
-                    className="absolute inset-0 h-full w-full"
-                    onClick={() => {
-                      if (enableInteractions && !isDragging) {
-                        setSelectedItem(item);
-                      }
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-                  <motion.div
-                    className="absolute inset-0 flex flex-col justify-end p-4"
-                    initial={{ opacity: 0.88 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <h3 className="relative line-clamp-1 text-lg font-semibold text-white">
-                      {item.title}
-                    </h3>
-                    <p className="relative mt-1 line-clamp-2 max-h-0 overflow-hidden text-sm leading-relaxed text-white/0 transition-all duration-300 group-hover:max-h-20 group-hover:text-white/78">
-                      {item.desc}
-                    </p>
-                  </motion.div>
+                    nextItems.splice(index, 1);
+                    nextItems.splice(targetIndex, 0, draggedItem);
+                    setItems(nextItems);
+                  }}
+                >
+                  <div className="relative h-full w-full overflow-hidden rounded-[1.1rem]">
+                    <MediaItem
+                      item={item}
+                      className="absolute inset-0 h-full w-full"
+                      onClick={() => {
+                        if (!isDragging) {
+                          setSelectedItem(item);
+                        }
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                    <motion.div
+                      className="absolute inset-0 flex flex-col justify-end p-4"
+                      initial={{ opacity: 0.88 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <h3 className="relative line-clamp-1 text-lg font-semibold text-white">
+                        {item.title}
+                      </h3>
+                      <p className="relative mt-1 line-clamp-2 max-h-0 overflow-hidden text-sm leading-relaxed text-white/0 transition-all duration-300 group-hover:max-h-20 group-hover:text-white/78">
+                        {item.desc}
+                      </p>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ) : (
+                <div
+                  key={item.id}
+                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] ${item.span}`}
+                >
+                  <div className="relative h-full w-full overflow-hidden rounded-[1.1rem]">
+                    <MediaItem item={item} className="absolute inset-0 h-full w-full" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                    <div className="absolute inset-0 flex flex-col justify-end p-4">
+                      <h3 className="relative line-clamp-1 text-lg font-semibold text-white">
+                        {item.title}
+                      </h3>
+                      <p className="relative mt-1 text-sm leading-relaxed text-white/78">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+              )
+            )}
+          </div>
         )}
       </AnimatePresence>
     </div>
