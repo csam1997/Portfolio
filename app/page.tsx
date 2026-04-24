@@ -176,9 +176,10 @@ const PROJECTS: Project[] = [
     icon: Lock,
     title: 'TrusLex',
     description:
-      'A Python toolkit for vulnerability scanning, CVE mapping, and PDF security reporting with a clean command-line workflow.',
-    tags: ['Python', 'Nmap', 'Security', 'Reporting'],
+      'An AI litigation visibility dashboard that turns lawsuit data into interactive maps, charts, and trend analysis for faster research.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'D3.js'],
     color: 'purple',
+    github: 'https://github.com/csam1997/TrusLex',
   },
   {
     icon: Activity,
@@ -190,11 +191,13 @@ const PROJECTS: Project[] = [
   },
   {
     icon: FileSearch,
-    title: 'Voyager',
+    title: 'AI Trip Planner',
     description:
-      'A network monitoring dashboard that highlights unusual traffic patterns and supports faster security triage.',
-    tags: ['Python', 'React', 'Wireshark', 'WebSockets'],
+      'A client-side travel planner that generates AI-powered itineraries, hotel suggestions, event ideas, and trip exports in a responsive interface.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'Groq API'],
     color: 'purple',
+    github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
+    live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
   },
 ];
 
