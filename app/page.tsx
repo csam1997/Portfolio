@@ -176,8 +176,8 @@ const PROJECTS: Project[] = [
     icon: Lock,
     title: 'TrusLex',
     description:
-      'An AI litigation visibility dashboard that turns lawsuit data into interactive maps, charts, and trend analysis for faster research.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'D3.js'],
+      'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
+    tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
     color: 'purple',
     github: 'https://github.com/csam1997/TrusLex',
   },
@@ -193,8 +193,8 @@ const PROJECTS: Project[] = [
     icon: FileSearch,
     title: 'AI Trip Planner',
     description:
-      'A client-side travel planner that generates AI-powered itineraries, hotel suggestions, event ideas, and trip exports in a responsive interface.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'Groq API'],
+      'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
     color: 'purple',
     github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
     live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
