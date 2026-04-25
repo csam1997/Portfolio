@@ -180,6 +180,7 @@ const PROJECTS: Project[] = [
     tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
     color: 'purple',
     github: 'https://github.com/csam1997/TrusLex',
+    live: 'https://csam1997.github.io/TrusLex/',
   },
   {
     icon: Activity,
