@@ -41,28 +41,28 @@ a {
 
 .section-depth-field {
   position: absolute;
-  inset: 4rem 1.5rem auto;
+  inset: 5rem -2rem auto;
   z-index: 0;
-  height: 22rem;
+  height: 30rem;
   border: 1px solid rgba(255, 255, 255, 0.055);
   border-radius: 18px;
   background:
-    linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(16, 185, 129, 0.045) 48%, rgba(251, 191, 36, 0.06)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 76px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.032) 0 1px, transparent 1px 76px);
+    radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.14), transparent 26%),
+    linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(16, 185, 129, 0.055) 48%, rgba(251, 191, 36, 0.08)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 72px);
   mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
 }
 
 .hero-depth-grid {
   position: absolute;
-  inset: -12% -8% auto;
-  height: 90vh;
+  inset: -18% -10% auto;
+  height: 112vh;
   background:
-    linear-gradient(rgba(103, 232, 249, 0.095) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(52, 211, 153, 0.08) 1px, transparent 1px);
-  background-size: 72px 72px;
+    linear-gradient(rgba(103, 232, 249, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 211, 153, 0.12) 1px, transparent 1px);
+  background-size: 68px 68px;
   mask-image: radial-gradient(ellipse at center, black 0%, transparent 68%);
-  opacity: 0.68;
   transform: rotateX(62deg) translateY(12vh);
   transform-origin: center;
 }
@@ -81,7 +81,7 @@ a {
   height: min(66vw, 760px);
   margin-left: clamp(420px, 50vw, 680px);
   margin-top: clamp(110px, 16vh, 170px);
-  opacity: 0.74;
+  opacity: 0.82;
   transform-style: preserve-3d;
 }
 

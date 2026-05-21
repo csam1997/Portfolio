@@ -11,6 +11,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
+import type { MotionValue } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
@@ -475,12 +476,18 @@ function Section({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, margin: '-80px 0px' });
-  const { scrollYProgress } = useScroll();
-  const fieldY = useSpring(useTransform(scrollYProgress, [0, 1], [-56, 56]), {
-    stiffness: 80,
-    damping: 28,
-    mass: 0.35,
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
   });
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 26,
+    mass: 0.28,
+  });
+  const fieldY = useTransform(smoothProgress, [0, 1], [150, -150]);
+  const fieldX = useTransform(smoothProgress, [0, 1], [-46, 46]);
+  const fieldRotate = useTransform(smoothProgress, [0, 1], [-2.5, 2.5]);
 
   return (
     <motion.section
@@ -494,9 +501,9 @@ function Section({
       <motion.div
         aria-hidden="true"
         className="section-depth-field"
-        animate={{ opacity: inView ? 0.48 : 0 }}
+        animate={{ opacity: inView ? 0.7 : 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
-        style={{ y: fieldY }}
+        style={{ x: fieldX, y: fieldY, rotate: fieldRotate }}
       />
       <div className="relative z-10">{children}</div>
     </motion.section>
@@ -641,28 +648,32 @@ function ScrollProgressBar() {
   );
 }
 
-function HeroVisualStage() {
+function HeroVisualStage({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
   const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const smoothProgress = useSpring(scrollYProgress, {
+  const smoothProgress = useSpring(scrollProgress, {
     stiffness: 70,
     damping: 24,
     mass: 0.35,
   });
-  const stageY = useTransform(smoothProgress, [0, 0.26], [0, -130]);
-  const stageScale = useTransform(smoothProgress, [0, 0.26], [1, 1.12]);
-  const stageRotateX = useTransform(smoothProgress, [0, 0.26], [0, -16]);
-  const gridY = useTransform(smoothProgress, [0, 0.26], [0, 90]);
+  const stageX = useTransform(smoothProgress, [0, 1], [0, -260]);
+  const stageY = useTransform(smoothProgress, [0, 1], [0, -360]);
+  const stageScale = useTransform(smoothProgress, [0, 1], [1, 1.22]);
+  const stageRotateX = useTransform(smoothProgress, [0, 1], [0, -26]);
+  const stageRotateZ = useTransform(smoothProgress, [0, 1], [0, -10]);
+  const gridY = useTransform(smoothProgress, [0, 1], [0, 260]);
+  const gridOpacity = useTransform(smoothProgress, [0, 0.72, 1], [0.68, 0.42, 0.05]);
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <motion.div className="hero-depth-grid" style={{ y: gridY }} />
+      <motion.div className="hero-depth-grid" style={{ opacity: gridOpacity, y: gridY }} />
       <motion.div
         className="hero-stage-wrap"
         style={{
+          x: prefersReducedMotion ? 0 : stageX,
           y: prefersReducedMotion ? 0 : stageY,
           scale: prefersReducedMotion ? 1 : stageScale,
           rotateX: prefersReducedMotion ? 0 : stageRotateX,
+          rotateZ: prefersReducedMotion ? 0 : stageRotateZ,
         }}
       >
         <motion.div
@@ -708,24 +719,35 @@ function HeroVisualStage() {
 }
 
 function Hero() {
-  const { scrollY } = useScroll();
-  const smoothY = useSpring(scrollY, {
-    stiffness: 70,
-    damping: 24,
-    mass: 0.35,
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
   });
-  const y = useTransform(smoothY, [0, 650], [0, -130]);
-  const opacity = useTransform(smoothY, [0, 500], [1, 0]);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 72,
+    damping: 24,
+    mass: 0.32,
+  });
+  const contentY = useTransform(smoothProgress, [0, 1], [0, -230]);
+  const contentScale = useTransform(smoothProgress, [0, 1], [1, 0.9]);
+  const contentOpacity = useTransform(smoothProgress, [0, 0.72, 1], [1, 0.88, 0]);
+  const signalsY = useTransform(smoothProgress, [0, 1], [0, 170]);
+  const scrollCueOpacity = useTransform(smoothProgress, [0, 0.18], [1, 0]);
 
   return (
-    <motion.section
+    <section
       id="top"
-      style={{ opacity }}
-      className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center"
+      ref={ref}
+      className="relative z-10 h-[165svh]"
     >
-      <HeroVisualStage />
+      <div className="sticky top-0 flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center">
+        <HeroVisualStage scrollProgress={smoothProgress} />
 
-      <motion.div style={{ y }} className="relative z-10 flex max-w-4xl flex-col items-center gap-6">
+      <motion.div
+        style={{ opacity: contentOpacity, scale: contentScale, y: contentY }}
+        className="relative z-10 flex max-w-4xl flex-col items-center gap-6"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -794,6 +816,7 @@ function Hero() {
         </motion.div>
 
         <motion.div
+          style={{ y: signalsY }}
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.25, duration: 0.6 }}
@@ -817,12 +840,14 @@ function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.6 }}
+        style={{ opacity: scrollCueOpacity }}
         className="absolute bottom-10 flex flex-col items-center gap-2 text-white/30"
       >
         <span className="text-xs uppercase tracking-widest">Scroll</span>
         <ChevronDown className="h-4 w-4 animate-bounce" />
       </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 }
 
@@ -1328,7 +1353,7 @@ function Contact() {
 
 export default function PortfolioPage() {
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-black font-sans text-white">
+    <main className="relative min-h-screen bg-black font-sans text-white">
       <InteractiveNeuralVortexBackground />
 
       <div
