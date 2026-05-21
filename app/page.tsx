@@ -475,20 +475,12 @@ function Section({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, margin: '-80px 0px' });
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
+  const { scrollYProgress } = useScroll();
   const fieldY = useSpring(useTransform(scrollYProgress, [0, 1], [-56, 56]), {
     stiffness: 80,
     damping: 28,
     mass: 0.35,
   });
-  const fieldOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.18, 0.78, 1],
-    [0, 0.52, 0.38, 0]
-  );
 
   return (
     <motion.section
@@ -502,7 +494,9 @@ function Section({
       <motion.div
         aria-hidden="true"
         className="section-depth-field"
-        style={{ opacity: fieldOpacity, y: fieldY }}
+        animate={{ opacity: inView ? 0.48 : 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        style={{ y: fieldY }}
       />
       <div className="relative z-10">{children}</div>
     </motion.section>
