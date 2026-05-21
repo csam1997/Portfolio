@@ -88,9 +88,9 @@ export default function InteractiveNeuralVortexBackground() {
         noise = max(0.0, noise - 0.5);
         noise *= 1.0 - length(v_uv - 0.5);
 
-        vec3 color = vec3(0.5, 0.15, 0.65);
-        color = mix(color, vec3(0.02, 0.7, 0.9), 0.32 + 0.16 * sin(2.0 * u_scroll_progress + 1.2));
-        color += vec3(0.15, 0.0, 0.6) * sin(2.0 * u_scroll_progress + 1.5);
+        vec3 color = vec3(0.02, 0.58, 0.72);
+        color = mix(color, vec3(0.98, 0.58, 0.18), 0.2 + 0.14 * sin(2.0 * u_scroll_progress + 1.2));
+        color = mix(color, vec3(0.08, 0.76, 0.48), 0.22 + 0.1 * cos(2.0 * u_scroll_progress + 1.5));
         color *= noise;
 
         gl_FragColor = vec4(color, noise);

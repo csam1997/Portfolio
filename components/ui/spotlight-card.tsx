@@ -93,7 +93,7 @@ export function GlowCard({
     '--border-size': 'calc(var(--border, 2) * 1px)',
     '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
     '--outer': '1',
-    '--radius': '14',
+    '--radius': '8',
     '--size': '200',
     '--spotlight-size': 'calc(var(--size, 150) * 1px)',
     '--spread': spread,
@@ -121,7 +121,7 @@ export function GlowCard({
     <div
       data-glow
       style={style}
-      className={`${sizeClasses} ${customSize ? '' : 'aspect-[3/4]'} relative grid grid-rows-[1fr_auto] gap-4 rounded-2xl p-4 shadow-[0_1rem_2rem_-1rem_black] backdrop-blur-[5px] ${className}`}
+      className={`${sizeClasses} ${customSize ? '' : 'aspect-[3/4]'} relative grid grid-rows-[1fr_auto] gap-4 rounded-lg p-4 shadow-[0_1rem_2rem_-1rem_black] backdrop-blur-[5px] ${className}`}
     >
       <div data-glow />
       {children}

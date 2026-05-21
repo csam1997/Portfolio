@@ -1,12 +1,14 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import {
   motion,
   AnimatePresence,
   useInView,
+  useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
 } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
@@ -40,15 +42,17 @@ type NavLink = {
   label: string;
 };
 
+type AccentColor = 'blue' | 'green' | 'orange' | 'purple';
+
 type SkillGroup = {
-  color: 'purple';
+  color: AccentColor;
   icon: LucideIcon;
   skills: string[];
   title: string;
 };
 
 type Project = {
-  color: 'purple';
+  color: AccentColor;
   description: string;
   github?: string;
   icon: LucideIcon;
@@ -88,7 +92,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Bug,
     title: 'QA Automation & Testing',
-    color: 'purple',
+    color: 'green',
     skills: [
       'Selenium WebDriver',
       'Pytest',
@@ -105,7 +109,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Activity,
     title: 'API & Delivery',
-    color: 'purple',
+    color: 'blue',
     skills: [
       'Postman',
       'REST API Testing',
@@ -142,7 +146,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: FileSearch,
     title: 'Security Operations & Analysis',
-    color: 'purple',
+    color: 'orange',
     skills: [
       'Incident Triage',
       'Authentication Issue Investigation',
@@ -158,7 +162,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Terminal,
     title: 'Systems & Platforms',
-    color: 'purple',
+    color: 'blue',
     skills: [
       'Windows Server',
       'Linux / Unix',
@@ -178,7 +182,7 @@ const PROJECTS: Project[] = [
     description:
       'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
     tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
-    color: 'purple',
+    color: 'green',
     github: 'https://github.com/csam1997/TrusLex',
     live: 'https://csam1997.github.io/TrusLex/',
   },
@@ -188,7 +192,7 @@ const PROJECTS: Project[] = [
     description:
       'An end-to-end automation framework built for parallel execution, visual regression checks, and reliable CI pipelines.',
     tags: ['Playwright', 'TypeScript', 'CI/CD', 'Docker'],
-    color: 'purple',
+    color: 'blue',
   },
   {
     icon: FileSearch,
@@ -196,7 +200,7 @@ const PROJECTS: Project[] = [
     description:
       'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
     tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
-    color: 'purple',
+    color: 'orange',
     github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
     live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
   },
@@ -260,7 +264,7 @@ const EDUCATION = [
   {
     degree: 'MS, Computer Science (Cybersecurity)',
     school: 'The George Washington University, SEAS',
-    meta: 'Expected May 2026 · Washington, DC',
+    meta: 'Expected May 2026 - Washington, DC',
     details: [
       'Computer Security',
       'Network Security',
@@ -274,7 +278,7 @@ const EDUCATION = [
   {
     degree: 'BTech, Electrical & Computer Engineering',
     school: 'Indira Gandhi Institute of Technology',
-    meta: '2019 · India',
+    meta: '2019 - India',
     details: [],
   },
 ];
@@ -397,6 +401,51 @@ const OFF_SCREEN: BentoMediaItem[] = [
   },
 ];
 
+const HERO_SIGNALS = [
+  { value: 'IAM', label: 'Access lifecycle' },
+  { value: 'API', label: 'Regression suites' },
+  { value: 'Cloud', label: 'Azure security' },
+];
+
+const SCENE_NODES = [
+  {
+    icon: Shield,
+    label: 'Identity controls',
+    value: 'IAM',
+    x: 'clamp(-130px, -10vw, -72px)',
+    y: 'clamp(-135px, -12vw, -76px)',
+    z: '90px',
+    delay: '-1.2s',
+  },
+  {
+    icon: Activity,
+    label: 'Delivery checks',
+    value: 'CI',
+    x: 'clamp(150px, 23vw, 250px)',
+    y: 'clamp(-118px, -11vw, -72px)',
+    z: '40px',
+    delay: '-3.4s',
+  },
+  {
+    icon: Bug,
+    label: 'Automation coverage',
+    value: 'QA',
+    x: 'clamp(-110px, -9vw, -68px)',
+    y: 'clamp(92px, 12vw, 150px)',
+    z: '65px',
+    delay: '-5.1s',
+  },
+  {
+    icon: Terminal,
+    label: 'Systems evidence',
+    value: 'OPS',
+    x: 'clamp(142px, 20vw, 232px)',
+    y: 'clamp(98px, 13vw, 158px)',
+    z: '120px',
+    delay: '-6.2s',
+  },
+];
+
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -426,6 +475,20 @@ function Section({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, margin: '-80px 0px' });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+  const fieldY = useSpring(useTransform(scrollYProgress, [0, 1], [-56, 56]), {
+    stiffness: 80,
+    damping: 28,
+    mass: 0.35,
+  });
+  const fieldOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.78, 1],
+    [0, 0.52, 0.38, 0]
+  );
 
   return (
     <motion.section
@@ -436,7 +499,12 @@ function Section({
       animate={inView ? 'visible' : 'hidden'}
       className={`relative z-10 px-6 py-28 md:px-12 lg:px-24 ${className}`}
     >
-      {children}
+      <motion.div
+        aria-hidden="true"
+        className="section-depth-field"
+        style={{ opacity: fieldOpacity, y: fieldY }}
+      />
+      <div className="relative z-10">{children}</div>
     </motion.section>
   );
 }
@@ -450,7 +518,7 @@ function SectionHeading({ label, title }: { label: string; title: string }) {
       <h2 className="text-4xl font-light tracking-tight text-white md:text-5xl">
         {title}
       </h2>
-      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-fuchsia-500 to-cyan-400" />
+      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -476,7 +544,7 @@ function SectionHeadingStacked({
           </span>
         ))}
       </h2>
-      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-fuchsia-500 to-cyan-400" />
+      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -512,7 +580,7 @@ function Navbar() {
           <li>
             <a
               href="#contact"
-              className="rounded-lg border border-fuchsia-500/40 px-5 py-2 text-sm text-white transition-all duration-200 hover:border-fuchsia-400 hover:bg-fuchsia-500/10"
+              className="rounded-lg border border-cyan-300/35 px-5 py-2 text-sm text-white transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-300/10"
             >
               Hire Me
             </a>
@@ -536,7 +604,7 @@ function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mt-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/70 px-6 py-6 backdrop-blur-xl md:hidden"
+            className="mt-4 flex flex-col gap-4 rounded-lg border border-white/10 bg-black/70 px-6 py-6 backdrop-blur-xl md:hidden"
           >
             {NAV_LINKS.map((link) => (
               <a
@@ -551,7 +619,7 @@ function Navbar() {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="rounded-lg border border-fuchsia-500/40 px-5 py-2 text-center text-sm text-white"
+              className="rounded-lg border border-cyan-300/35 px-5 py-2 text-center text-sm text-white"
             >
               Hire Me
             </a>
@@ -562,23 +630,113 @@ function Navbar() {
   );
 }
 
+function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 110,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  return (
+    <motion.div
+      className="fixed left-0 right-0 top-0 z-[70] h-px origin-left bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300"
+      style={{ scaleX }}
+      aria-hidden="true"
+    />
+  );
+}
+
+function HeroVisualStage() {
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 24,
+    mass: 0.35,
+  });
+  const stageY = useTransform(smoothProgress, [0, 0.26], [0, -130]);
+  const stageScale = useTransform(smoothProgress, [0, 0.26], [1, 1.12]);
+  const stageRotateX = useTransform(smoothProgress, [0, 0.26], [0, -16]);
+  const gridY = useTransform(smoothProgress, [0, 0.26], [0, 90]);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <motion.div className="hero-depth-grid" style={{ y: gridY }} />
+      <motion.div
+        className="hero-stage-wrap"
+        style={{
+          y: prefersReducedMotion ? 0 : stageY,
+          scale: prefersReducedMotion ? 1 : stageScale,
+          rotateX: prefersReducedMotion ? 0 : stageRotateX,
+        }}
+      >
+        <motion.div
+          className="hero-stage-shell"
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : { rotateZ: [0, -1.4, 1.2, 0], rotateY: [0, 5, -4, 0] }
+          }
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="hero-stage-plane hero-stage-plane-one" />
+          <div className="hero-stage-plane hero-stage-plane-two" />
+          <div className="hero-stage-plane hero-stage-plane-three" />
+
+          <div className="hero-stage-core">
+            <Shield className="h-9 w-9 text-cyan-100" />
+            <span>Security QA</span>
+          </div>
+
+          {SCENE_NODES.map(({ icon: Icon, label, value, x, y, z, delay }) => (
+            <div
+              key={value}
+              className="hero-stage-node"
+              style={
+                {
+                  '--node-delay': delay,
+                  '--node-x': x,
+                  '--node-y': y,
+                  '--node-z': z,
+                } as CSSProperties
+              }
+            >
+              <Icon className="h-4 w-4 text-cyan-100" />
+              <span>{value}</span>
+              <small>{label}</small>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 function Hero() {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 600], [0, 180]);
-  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const smoothY = useSpring(scrollY, {
+    stiffness: 70,
+    damping: 24,
+    mass: 0.35,
+  });
+  const y = useTransform(smoothY, [0, 650], [0, -130]);
+  const opacity = useTransform(smoothY, [0, 500], [1, 0]);
 
   return (
     <motion.section
       id="top"
       style={{ opacity }}
-      className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pt-24 text-center"
+      className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center"
     >
-      <motion.div style={{ y }} className="flex max-w-3xl flex-col items-center gap-6">
+      <HeroVisualStage />
+
+      <motion.div style={{ y }} className="relative z-10 flex max-w-4xl flex-col items-center gap-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/5 px-4 py-2 text-xs font-medium uppercase tracking-widest text-cyan-400"
+          className="flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/8 px-4 py-2 text-xs font-medium uppercase tracking-widest text-cyan-200 backdrop-blur-md"
         >
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
           Available for work
@@ -592,10 +750,10 @@ function Hero() {
             duration: 0.8,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
           }}
-          className="text-5xl font-light leading-none tracking-tight text-white md:text-7xl lg:text-8xl"
+          className="text-5xl font-light leading-none tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.72)] md:text-7xl lg:text-8xl"
         >
           Chiranjib
-          <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-cyan-200 via-white to-amber-200 bg-clip-text text-transparent">
             {' '}Samantaray
           </span>
         </motion.h1>
@@ -604,7 +762,7 @@ function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.6 }}
-          className="text-lg font-light uppercase tracking-widest text-white/60 md:text-xl"
+          className="text-lg font-light uppercase tracking-widest text-white/70 drop-shadow-[0_2px_20px_rgba(0,0,0,0.75)] md:text-xl"
         >
           Learning to secure the world.
         </motion.p>
@@ -613,7 +771,7 @@ function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.6 }}
-          className="max-w-xl text-base leading-relaxed text-white/45 md:text-lg"
+          className="max-w-xl text-base leading-relaxed text-white/58 drop-shadow-[0_2px_18px_rgba(0,0,0,0.82)] md:text-lg"
         >
           Cybersecurity graduate student with nearly 5 years of enterprise
           experience in IAM, cloud identity, and automation for banking and
@@ -629,7 +787,7 @@ function Hero() {
         >
           <a
             href="#projects"
-            className="rounded-xl bg-gradient-to-r from-fuchsia-600 to-cyan-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/25 transition-opacity hover:opacity-90"
+            className="rounded-xl bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20 transition-opacity hover:opacity-90"
           >
             View My Work
           </a>
@@ -639,6 +797,25 @@ function Hero() {
           >
             Get In Touch
           </a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.25, duration: 0.6 }}
+          className="grid w-full max-w-2xl grid-cols-1 gap-3 pt-4 sm:grid-cols-3"
+        >
+          {HERO_SIGNALS.map((signal) => (
+            <div
+              key={signal.value}
+              className="rounded-lg border border-white/10 bg-black/24 px-4 py-3 text-left backdrop-blur-md"
+            >
+              <span className="text-sm font-semibold text-cyan-200">
+                {signal.value}
+              </span>
+              <p className="mt-1 text-xs text-white/45">{signal.label}</p>
+            </div>
+          ))}
         </motion.div>
       </motion.div>
 
@@ -662,7 +839,7 @@ function About() {
 
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
         <motion.div variants={fadeUp}>
-          <GlowCard customSize glowColor="purple" className="h-auto w-full !aspect-auto p-8">
+          <GlowCard customSize glowColor="green" className="h-auto w-full !aspect-auto p-8">
             <div className="relative z-10 flex flex-col gap-5">
               <p className="text-base leading-relaxed text-white/80">
                 Cybersecurity graduate student at The George Washington University
@@ -675,7 +852,7 @@ function About() {
 
               <p className="text-base leading-relaxed text-white/60">
                 Currently deepening my expertise in network defense, cloud
-                security, penetration testing, and trustworthy AI — with the goal
+                security, penetration testing, and trustworthy AI, with the goal
                 of transitioning into a full-time cybersecurity analyst role.
               </p>
             </div>
@@ -687,11 +864,11 @@ function About() {
             <motion.div key={stat.label} variants={fadeUp}>
               <GlowCard
                 customSize
-                glowColor="purple"
+                glowColor="blue"
                 className="flex h-full w-full !aspect-auto flex-col items-center justify-center p-6 text-center"
               >
                 <div className="relative z-10 flex flex-col items-center gap-1">
-                  <span className="bg-gradient-to-b from-white to-fuchsia-300 bg-clip-text text-4xl font-light text-transparent">
+                    <span className="bg-gradient-to-b from-white to-amber-200 bg-clip-text text-4xl font-light text-transparent">
                     {stat.value}
                   </span>
                   <span className="text-xs uppercase leading-tight tracking-wide text-white/50">
@@ -727,7 +904,7 @@ function Education() {
         <motion.div variants={stagger} className="flex flex-col gap-6">
           {EDUCATION.map((item) => (
             <motion.div key={`${item.degree}-${item.school}`} variants={fadeUp}>
-              <GlowCard customSize glowColor="purple" className="w-full !aspect-auto p-8">
+              <GlowCard customSize glowColor="orange" className="w-full !aspect-auto p-8">
                 <div className="relative z-10 flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
                     <h3 className="text-2xl font-medium text-white">{item.degree}</h3>
@@ -811,8 +988,8 @@ function Credentials() {
             >
               <GlowCard
                 customSize
-                glowColor="purple"
-                className="w-full !aspect-auto rounded-[2rem] p-8"
+                glowColor="blue"
+                className="w-full !aspect-auto p-8"
               >
                 <div className="relative z-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
                   <CredentialBadge
@@ -825,9 +1002,9 @@ function Credentials() {
                       {credential.title}
                     </h3>
                     <p className="text-sm leading-relaxed text-white/42 sm:text-base">
-                      {credential.level ? `${credential.level} · ` : ''}
+          {credential.level ? `${credential.level} - ` : ''}
                       {credential.issuer}
-                      {credential.status ? ' · ' : ''}
+                      {credential.status ? ' - ' : ''}
                       {credential.status ? (
                         <span className="text-cyan-300">{credential.status}</span>
                       ) : null}
@@ -868,7 +1045,7 @@ function Experience() {
       <motion.div variants={stagger} className="mx-auto flex max-w-5xl flex-col gap-6">
         {EXPERIENCE.map((role) => (
           <motion.div key={`${role.title}-${role.period}`} variants={fadeUp}>
-            <GlowCard customSize glowColor="purple" className="w-full !aspect-auto p-8">
+            <GlowCard customSize glowColor="green" className="w-full !aspect-auto p-8">
               <div className="relative z-10 flex flex-col gap-5">
                 <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                   <div>
@@ -880,7 +1057,7 @@ function Experience() {
                   <span className="text-sm font-medium text-white/55">{role.period}</span>
                 </div>
 
-                <details className="group rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+                <details className="group rounded-lg border border-white/10 bg-white/[0.03] px-5 py-4">
                   <summary className="cursor-pointer list-none text-sm font-medium text-white/75 transition-colors group-open:text-white">
                     View details
                   </summary>
@@ -908,7 +1085,7 @@ function Experience() {
                             <ul className="space-y-3 text-sm leading-relaxed text-white/65">
                               {highlight.bullets.map((bullet) => (
                                 <li key={bullet} className="flex gap-3">
-                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-fuchsia-400" />
+                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
                                   <span>{bullet}</span>
                                 </li>
                               ))}
@@ -946,7 +1123,7 @@ function Skills() {
             >
               <div className="relative z-10 flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-600/40 to-cyan-600/40">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
                     <Icon className="h-5 w-5 text-cyan-300" />
                   </div>
                   <h3 className="text-lg font-medium text-white">{title}</h3>
@@ -1026,7 +1203,7 @@ function Projects() {
                 <div className="relative z-10 flex h-full flex-col gap-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-600/40 to-cyan-600/40">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
                         <Icon className="h-5 w-5 text-cyan-300" />
                       </div>
                       <h3 className="text-lg font-medium leading-snug text-white">
@@ -1044,7 +1221,7 @@ function Projects() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-md border border-fuchsia-500/20 bg-fuchsia-500/10 px-2.5 py-1 text-xs font-medium text-fuchsia-300"
+                        className="rounded-md border border-cyan-300/20 bg-cyan-300/8 px-2.5 py-1 text-xs font-medium text-cyan-200"
                       >
                         {tag}
                       </span>
@@ -1131,7 +1308,7 @@ function Contact() {
               target={href.startsWith('mailto:') ? undefined : '_blank'}
               rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={label}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-cyan-400/30 hover:bg-cyan-400/8 hover:text-cyan-300"
+              className="flex h-14 w-14 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-cyan-400/30 hover:bg-cyan-400/8 hover:text-cyan-300"
             >
               <Icon className="h-5 w-5" />
             </motion.a>
@@ -1148,7 +1325,7 @@ function Contact() {
           <span className="font-medium text-cyan-300">Chiranjib Samantaray</span>
         </p>
         <p className="mt-3 text-xs tracking-[0.2em] text-white/18">
-          © 2026 All rights reserved.
+          (c) 2026 All rights reserved.
         </p>
       </motion.div>
     </Section>
@@ -1168,6 +1345,7 @@ export default function PortfolioPage() {
         }}
       />
 
+      <ScrollProgressBar />
       <Navbar />
       <Hero />
       <About />
