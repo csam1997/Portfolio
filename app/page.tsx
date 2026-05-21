@@ -403,48 +403,15 @@ const OFF_SCREEN: BentoMediaItem[] = [
 ];
 
 const HERO_SIGNALS = [
-  { value: 'IAM', label: 'Access lifecycle' },
-  { value: 'API', label: 'Regression suites' },
-  { value: 'Cloud', label: 'Azure security' },
+  { value: 'Cloud Security', label: 'Azure, identity, and governance' },
+  { value: 'Quality Engineering', label: 'Automation and release confidence' },
+  { value: 'Platform Work', label: 'Systems, evidence, and delivery' },
 ];
 
-const SCENE_NODES = [
-  {
-    icon: Shield,
-    label: 'Identity controls',
-    value: 'IAM',
-    x: 'clamp(-130px, -10vw, -72px)',
-    y: 'clamp(-135px, -12vw, -76px)',
-    z: '90px',
-    delay: '-1.2s',
-  },
-  {
-    icon: Activity,
-    label: 'Delivery checks',
-    value: 'CI',
-    x: 'clamp(150px, 23vw, 250px)',
-    y: 'clamp(-118px, -11vw, -72px)',
-    z: '40px',
-    delay: '-3.4s',
-  },
-  {
-    icon: Bug,
-    label: 'Automation coverage',
-    value: 'QA',
-    x: 'clamp(-110px, -9vw, -68px)',
-    y: 'clamp(92px, 12vw, 150px)',
-    z: '65px',
-    delay: '-5.1s',
-  },
-  {
-    icon: Terminal,
-    label: 'Systems evidence',
-    value: 'OPS',
-    x: 'clamp(142px, 20vw, 232px)',
-    y: 'clamp(98px, 13vw, 158px)',
-    z: '120px',
-    delay: '-6.2s',
-  },
+const HERO_LANES = [
+  { width: '38%', x: '8%', y: '28%', delay: '-1.2s' },
+  { width: '28%', x: '64%', y: '18%', delay: '-3.8s' },
+  { width: '46%', x: '42%', y: '62%', delay: '-5.1s' },
 ];
 
 const fadeUp = {
@@ -655,64 +622,79 @@ function HeroVisualStage({ scrollProgress }: { scrollProgress: MotionValue<numbe
     damping: 24,
     mass: 0.35,
   });
-  const stageX = useTransform(smoothProgress, [0, 1], [0, -260]);
-  const stageY = useTransform(smoothProgress, [0, 1], [0, -360]);
-  const stageScale = useTransform(smoothProgress, [0, 1], [1, 1.22]);
-  const stageRotateX = useTransform(smoothProgress, [0, 1], [0, -26]);
-  const stageRotateZ = useTransform(smoothProgress, [0, 1], [0, -10]);
+  const farY = useTransform(smoothProgress, [0, 1], [80, -170]);
+  const midX = useTransform(smoothProgress, [0, 1], [-80, 160]);
+  const midY = useTransform(smoothProgress, [0, 1], [40, -320]);
+  const nearX = useTransform(smoothProgress, [0, 1], [80, -260]);
+  const nearY = useTransform(smoothProgress, [0, 1], [20, -560]);
+  const coreY = useTransform(smoothProgress, [0, 1], [0, -230]);
+  const coreScale = useTransform(smoothProgress, [0, 1], [1, 1.16]);
+  const coreRotate = useTransform(smoothProgress, [0, 1], [0, -14]);
   const gridY = useTransform(smoothProgress, [0, 1], [0, 260]);
-  const gridOpacity = useTransform(smoothProgress, [0, 0.72, 1], [0.68, 0.42, 0.05]);
+  const gridOpacity = useTransform(smoothProgress, [0, 0.72, 1], [0.56, 0.34, 0.03]);
+  const stageOpacity = useTransform(smoothProgress, [0, 0.75, 1], [0.9, 0.64, 0.1]);
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <motion.div className="hero-depth-grid" style={{ opacity: gridOpacity, y: gridY }} />
       <motion.div
+        className="hero-atmosphere hero-atmosphere-far"
+        style={{ y: prefersReducedMotion ? 0 : farY, opacity: stageOpacity }}
+      />
+      <motion.div
+        className="hero-atmosphere hero-atmosphere-mid"
+        style={{
+          x: prefersReducedMotion ? 0 : midX,
+          y: prefersReducedMotion ? 0 : midY,
+          opacity: stageOpacity,
+        }}
+      />
+      <motion.div
         className="hero-stage-wrap"
         style={{
-          x: prefersReducedMotion ? 0 : stageX,
-          y: prefersReducedMotion ? 0 : stageY,
-          scale: prefersReducedMotion ? 1 : stageScale,
-          rotateX: prefersReducedMotion ? 0 : stageRotateX,
-          rotateZ: prefersReducedMotion ? 0 : stageRotateZ,
+          x: prefersReducedMotion ? 0 : nearX,
+          y: prefersReducedMotion ? 0 : nearY,
+          opacity: stageOpacity,
+        }}
+      >
+        <div className="hero-depth-lanes">
+          {HERO_LANES.map((lane) => (
+            <span
+              key={`${lane.x}-${lane.y}`}
+              style={
+                {
+                  '--lane-delay': lane.delay,
+                  '--lane-width': lane.width,
+                  '--lane-x': lane.x,
+                  '--lane-y': lane.y,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+      </motion.div>
+      <motion.div
+        className="hero-focus-system"
+        style={{
+          y: prefersReducedMotion ? 0 : coreY,
+          scale: prefersReducedMotion ? 1 : coreScale,
+          rotate: prefersReducedMotion ? 0 : coreRotate,
+          opacity: stageOpacity,
         }}
       >
         <motion.div
-          className="hero-stage-shell"
-          animate={
-            prefersReducedMotion
-              ? undefined
-              : { rotateZ: [0, -1.4, 1.2, 0], rotateY: [0, 5, -4, 0] }
-          }
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <div className="hero-stage-plane hero-stage-plane-one" />
-          <div className="hero-stage-plane hero-stage-plane-two" />
-          <div className="hero-stage-plane hero-stage-plane-three" />
-
-          <div className="hero-stage-core">
-            <Shield className="h-9 w-9 text-cyan-100" />
-            <span>Security QA</span>
-          </div>
-
-          {SCENE_NODES.map(({ icon: Icon, label, value, x, y, z, delay }) => (
-            <div
-              key={value}
-              className="hero-stage-node"
-              style={
-                {
-                  '--node-delay': delay,
-                  '--node-x': x,
-                  '--node-y': y,
-                  '--node-z': z,
-                } as CSSProperties
-              }
-            >
-              <Icon className="h-4 w-4 text-cyan-100" />
-              <span>{value}</span>
-              <small>{label}</small>
-            </div>
-          ))}
-        </motion.div>
+          className="hero-focus-ring hero-focus-ring-outer"
+          animate={prefersReducedMotion ? undefined : { rotate: 360 }}
+          transition={{ duration: 42, repeat: Infinity, ease: 'linear' }}
+        />
+        <motion.div
+          className="hero-focus-ring hero-focus-ring-inner"
+          animate={prefersReducedMotion ? undefined : { rotate: -360 }}
+          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        />
+        <div className="hero-focus-core">
+          <Shield className="h-8 w-8 text-cyan-100" />
+        </div>
       </motion.div>
     </div>
   );
