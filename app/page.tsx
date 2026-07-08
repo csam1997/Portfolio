@@ -504,7 +504,7 @@ function Section({
       variants={stagger}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
-      className={`relative z-10 px-6 py-28 md:px-12 lg:px-24 ${className}`}
+      className={`relative z-10 px-6 py-20 md:px-10 lg:px-16 ${className}`}
     >
       <motion.div
         aria-hidden="true"
@@ -520,7 +520,7 @@ function Section({
 
 function SectionHeading({ label, title }: { label: string; title: string }) {
   return (
-    <motion.div variants={fadeUp} className="mb-16 flex flex-col items-center text-center">
+    <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
       <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
         <span className="h-1 w-1 rounded-full bg-cyan-300" />
         {label}
@@ -541,7 +541,7 @@ function SectionHeadingStacked({
   titleLines: string[];
 }) {
   return (
-    <motion.div variants={fadeUp} className="mb-16 flex flex-col items-center text-center">
+    <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
       <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
         <span className="h-1 w-1 rounded-full bg-cyan-300" />
         {label}
@@ -884,7 +884,7 @@ function About() {
     <Section id="about">
       <SectionHeading label="Who I Am" title="About Me" />
 
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr]">
         <motion.div variants={fadeUp}>
           <GlowCard customSize glowColor="green" className="h-auto w-full !aspect-auto p-8">
             <div className="relative z-10 flex flex-col gap-5">
@@ -941,20 +941,11 @@ function Education() {
 
       <motion.div
         variants={stagger}
-        className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1.1fr_1.4fr]"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-2"
       >
-        <motion.div variants={fadeUp} className="flex items-start">
-          <div className="max-w-md">
-            <p className="font-display text-4xl font-semibold leading-[0.95] tracking-tight text-white md:text-6xl">
-              The foundation behind it all.
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.div variants={stagger} className="flex flex-col gap-6">
-          {EDUCATION.map((item) => (
-            <motion.div key={`${item.degree}-${item.school}`} variants={fadeUp}>
-              <GlowCard customSize glowColor="orange" className="w-full !aspect-auto p-8">
+        {EDUCATION.map((item) => (
+          <motion.div key={`${item.degree}-${item.school}`} variants={fadeUp}>
+            <GlowCard customSize glowColor="orange" className="h-full w-full !aspect-auto p-8">
                 <div className="relative z-10 flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
                     <h3 className="font-display text-2xl font-medium text-white">{item.degree}</h3>
@@ -977,10 +968,9 @@ function Education() {
                     </div>
                   ) : null}
                 </div>
-              </GlowCard>
-            </motion.div>
-          ))}
-        </motion.div>
+            </GlowCard>
+          </motion.div>
+        ))}
       </motion.div>
     </Section>
   );
@@ -1021,23 +1011,21 @@ function CredentialBadge({
 function Credentials() {
   return (
     <Section id="credentials">
-      <motion.div variants={stagger} className="mx-auto flex max-w-4xl flex-col gap-12">
+      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col gap-12">
         <SectionHeadingStacked
           label="Credentials"
           titleLines={['Backed by', 'verified learning.']}
         />
 
         <motion.div
-          variants={fadeUp}
-          className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm"
+          variants={stagger}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         >
           {CREDENTIALS.map((credential, index) => (
             <motion.div
               key={`${credential.title}-${credential.level ?? credential.issuer}`}
               variants={fadeUp}
-              className={`flex flex-col items-start gap-4 px-6 py-6 transition-colors duration-200 hover:bg-white/[0.03] sm:flex-row sm:items-center sm:gap-6 sm:px-8 ${
-                index === 0 ? '' : 'border-t border-white/8'
-              }`}
+              className="flex items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/[0.04]"
             >
               <span className="font-display hidden text-xs text-white/25 sm:block">
                 {String(index + 1).padStart(2, '0')}
@@ -1068,7 +1056,7 @@ function Credentials() {
 function OffScreen() {
   return (
     <Section id="off-screen">
-      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col gap-12">
+      <motion.div variants={stagger} className="mx-auto flex max-w-7xl flex-col gap-12">
         <SectionHeadingStacked
           label="Off Screen"
           titleLines={['When I step away', 'from the screen.']}
@@ -1087,7 +1075,7 @@ function Experience() {
     <Section id="experience">
       <SectionHeading label="Journey" title="Where I got the opportunity." />
 
-      <motion.div variants={stagger} className="mx-auto flex max-w-5xl flex-col">
+      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col">
         {EXPERIENCE.map((role, index) => (
           <motion.div
             key={`${role.title}-${role.period}`}
@@ -1170,7 +1158,7 @@ function Skills() {
 
       <motion.div
         variants={stagger}
-        className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
       >
         {SKILL_GROUPS.map(({ color, icon: Icon, skills, title }, index) => (
           <motion.div key={title} variants={fadeUp}>
@@ -1251,7 +1239,7 @@ function Projects() {
 
       <motion.div
         variants={stagger}
-        className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
       >
         {PROJECTS.map((project, index) => {
           const Icon = project.icon;
