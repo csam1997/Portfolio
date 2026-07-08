@@ -10,6 +10,7 @@ const config: Config = {
       fontFamily: {
         mono: ['var(--font-mono)', 'monospace'],
         sans: ['var(--font-sans)', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'sans-serif'],
       },
     },
   },

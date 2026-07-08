@@ -85,9 +85,9 @@ const NAV_LINKS: NavLink[] = [
 
 const STATS = [
   { value: '5+', label: 'Years Experience' },
-  { value: '8', label: 'Home Lab Projects' },
+  { value: '11', label: 'Projects Shipped' },
   { value: '200+', label: 'Tests Automated' },
-  { value: '3', label: 'Certifications' },
+  { value: '4', label: 'Certifications' },
 ];
 
 const SKILL_GROUPS: SkillGroup[] = [
@@ -239,6 +239,34 @@ const PROJECTS: Project[] = [
     tags: ['Selenium', 'TestNG', 'Cucumber', 'Jenkins', 'Postman/Newman'],
     color: 'orange',
   },
+  {
+    icon: Lock,
+    title: 'TrusLex',
+    description:
+      'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
+    tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
+    color: 'green',
+    github: 'https://github.com/csam1997/TrusLex',
+    live: 'https://csam1997.github.io/TrusLex/',
+  },
+  {
+    icon: Activity,
+    title: 'Meals-on-Wheels',
+    description:
+      'An end-to-end automation framework built for parallel execution, visual regression checks, and reliable CI pipelines.',
+    tags: ['Playwright', 'TypeScript', 'CI/CD', 'Docker'],
+    color: 'blue',
+  },
+  {
+    icon: FileSearch,
+    title: 'AI Trip Planner',
+    description:
+      'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
+    color: 'orange',
+    github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
+    live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
+  },
 ];
 
 const EXPERIENCE = [
@@ -335,6 +363,13 @@ const CREDENTIALS: Credential[] = [
     title: 'Copilot and Agent Administration Fundamentals',
     issuer: 'Microsoft 365',
     level: 'AB-900',
+  },
+  {
+    badge: 'CTTC',
+    badgeStyle: 'gold',
+    title: 'PLC & SCADA',
+    issuer: 'MSME, Govt. of India',
+    level: 'CTTC',
   },
 ];
 
@@ -485,14 +520,15 @@ function Section({
 
 function SectionHeading({ label, title }: { label: string; title: string }) {
   return (
-    <motion.div variants={fadeUp} className="mb-16 text-center">
-      <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400">
+    <motion.div variants={fadeUp} className="mb-16 flex flex-col items-center text-center">
+      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
+        <span className="h-1 w-1 rounded-full bg-cyan-300" />
         {label}
       </span>
-      <h2 className="text-4xl font-light tracking-tight text-white md:text-5xl">
+      <h2 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
         {title}
       </h2>
-      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
+      <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -505,11 +541,12 @@ function SectionHeadingStacked({
   titleLines: string[];
 }) {
   return (
-    <motion.div variants={fadeUp} className="mb-16 text-center">
-      <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400">
+    <motion.div variants={fadeUp} className="mb-16 flex flex-col items-center text-center">
+      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
+        <span className="h-1 w-1 rounded-full bg-cyan-300" />
         {label}
       </span>
-      <h2 className="text-4xl font-light tracking-tight text-white md:text-5xl">
+      <h2 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
         {titleLines.map((line, index) => (
           <span key={`${label}-${line}`} className="block">
             <span className={index === titleLines.length - 1 ? 'text-white/24' : ''}>
@@ -518,7 +555,7 @@ function SectionHeadingStacked({
           </span>
         ))}
       </h2>
-      <div className="mx-auto mt-4 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
+      <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -531,30 +568,31 @@ function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/30 px-6 py-4 backdrop-blur-xl md:px-12"
+      className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-black/40 px-6 py-4 backdrop-blur-xl md:px-12"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
-        <a href="#top" className="flex items-center gap-2">
-          <span className="text-sm font-semibold tracking-wide text-white">
-            &lt;ChiranjibS /&gt;
+        <a href="#top" className="flex items-center gap-2.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-br from-cyan-300 to-emerald-300" />
+          <span className="font-display text-base font-semibold tracking-tight text-white">
+            Chiranjib<span className="text-white/40">.dev</span>
           </span>
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-sm tracking-wide text-white/60 transition-colors duration-200 hover:text-white"
+                className="rounded-full px-3.5 py-2 text-sm tracking-wide text-white/55 transition-colors duration-200 hover:bg-white/5 hover:text-white"
               >
                 {link.label}
               </a>
             </li>
           ))}
-          <li>
+          <li className="ml-2">
             <a
               href="#contact"
-              className="rounded-lg border border-cyan-300/35 px-5 py-2 text-sm text-white transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-300/10"
+              className="rounded-full border border-cyan-300/35 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-300/10"
             >
               Hire Me
             </a>
@@ -578,7 +616,7 @@ function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mt-4 flex flex-col gap-4 rounded-lg border border-white/10 bg-black/70 px-6 py-6 backdrop-blur-xl md:hidden"
+            className="mt-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/70 px-6 py-6 backdrop-blur-xl md:hidden"
           >
             {NAV_LINKS.map((link) => (
               <a
@@ -754,7 +792,7 @@ function Hero() {
             duration: 0.8,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
           }}
-          className="text-5xl font-light leading-none tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.72)] md:text-7xl lg:text-8xl"
+          className="font-display text-5xl font-medium leading-none tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.72)] md:text-7xl lg:text-8xl"
         >
           Chiranjib
           <span className="bg-gradient-to-r from-cyan-200 via-white to-amber-200 bg-clip-text text-transparent">
@@ -793,13 +831,13 @@ function Hero() {
         >
           <a
             href="#projects"
-            className="rounded-xl bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20 transition-opacity hover:opacity-90"
+            className="rounded-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20 transition-opacity hover:opacity-90"
           >
             View My Work
           </a>
           <a
             href="#contact"
-            className="rounded-xl border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white"
+            className="rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white"
           >
             Get In Touch
           </a>
@@ -815,9 +853,9 @@ function Hero() {
           {HERO_SIGNALS.map((signal) => (
             <div
               key={signal.value}
-              className="rounded-lg border border-white/10 bg-black/24 px-4 py-3 text-left backdrop-blur-md"
+              className="rounded-2xl border border-white/10 bg-black/24 px-4 py-3 text-left backdrop-blur-md transition-colors duration-200 hover:border-cyan-300/25"
             >
-              <span className="text-sm font-semibold text-cyan-200">
+              <span className="font-display text-sm font-semibold text-cyan-200">
                 {signal.value}
               </span>
               <p className="mt-1 text-xs text-white/45">{signal.label}</p>
@@ -880,7 +918,7 @@ function About() {
                 className="flex h-full w-full !aspect-auto flex-col items-center justify-center p-6 text-center"
               >
                 <div className="relative z-10 flex flex-col items-center gap-1">
-                    <span className="bg-gradient-to-b from-white to-amber-200 bg-clip-text text-4xl font-light text-transparent">
+                    <span className="font-display bg-gradient-to-b from-white to-amber-200 bg-clip-text text-4xl font-medium text-transparent">
                     {stat.value}
                   </span>
                   <span className="text-xs uppercase leading-tight tracking-wide text-white/50">
@@ -907,7 +945,7 @@ function Education() {
       >
         <motion.div variants={fadeUp} className="flex items-start">
           <div className="max-w-md">
-            <p className="text-4xl font-semibold leading-[0.95] tracking-tight text-white md:text-6xl">
+            <p className="font-display text-4xl font-semibold leading-[0.95] tracking-tight text-white md:text-6xl">
               The foundation behind it all.
             </p>
           </div>
@@ -919,7 +957,7 @@ function Education() {
               <GlowCard customSize glowColor="orange" className="w-full !aspect-auto p-8">
                 <div className="relative z-10 flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-2xl font-medium text-white">{item.degree}</h3>
+                    <h3 className="font-display text-2xl font-medium text-white">{item.degree}</h3>
                     <p className="text-sm uppercase tracking-[0.24em] text-cyan-300/80">
                       {item.school}
                     </p>
@@ -954,12 +992,12 @@ function CredentialBadge({
 }: Pick<Credential, 'badge' | 'badgeStyle'>) {
   if (badgeStyle === 'azure') {
     return (
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-cyan-500/25 bg-cyan-500/8 sm:h-22 sm:w-22">
-        <div className="grid grid-cols-2 gap-1">
-          <span className="h-6 w-6 bg-[#f25022]" />
-          <span className="h-6 w-6 bg-[#7fba00]" />
-          <span className="h-6 w-6 bg-[#00a4ef]" />
-          <span className="h-6 w-6 bg-[#ffb900]" />
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-cyan-500/25 bg-cyan-500/8">
+        <div className="grid grid-cols-2 gap-[3px]">
+          <span className="h-3.5 w-3.5 bg-[#f25022]" />
+          <span className="h-3.5 w-3.5 bg-[#7fba00]" />
+          <span className="h-3.5 w-3.5 bg-[#00a4ef]" />
+          <span className="h-3.5 w-3.5 bg-[#ffb900]" />
         </div>
       </div>
     );
@@ -967,14 +1005,14 @@ function CredentialBadge({
 
   if (badgeStyle === 'green') {
     return (
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-emerald-500/30 bg-emerald-500/8 px-3 text-center text-2xl font-semibold text-emerald-300 sm:h-22 sm:w-22">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/8 px-2 text-center text-sm font-semibold text-emerald-300">
         {badge}
       </div>
     );
   }
 
   return (
-    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.75rem] border border-amber-500/30 bg-amber-500/8 px-3 text-center text-2xl font-semibold text-amber-300 sm:h-22 sm:w-22">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/8 px-2 text-center text-sm font-semibold text-amber-300">
       {badge}
     </div>
   );
@@ -983,47 +1021,42 @@ function CredentialBadge({
 function Credentials() {
   return (
     <Section id="credentials">
-      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col gap-12">
+      <motion.div variants={stagger} className="mx-auto flex max-w-4xl flex-col gap-12">
         <SectionHeadingStacked
           label="Credentials"
           titleLines={['Backed by', 'verified learning.']}
         />
 
         <motion.div
-          variants={stagger}
-          className="grid grid-cols-1 gap-6 md:grid-cols-2"
+          variants={fadeUp}
+          className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm"
         >
-          {CREDENTIALS.map((credential) => (
+          {CREDENTIALS.map((credential, index) => (
             <motion.div
               key={`${credential.title}-${credential.level ?? credential.issuer}`}
               variants={fadeUp}
+              className={`flex flex-col items-start gap-4 px-6 py-6 transition-colors duration-200 hover:bg-white/[0.03] sm:flex-row sm:items-center sm:gap-6 sm:px-8 ${
+                index === 0 ? '' : 'border-t border-white/8'
+              }`}
             >
-              <GlowCard
-                customSize
-                glowColor="blue"
-                className="w-full !aspect-auto p-8"
-              >
-                <div className="relative z-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-                  <CredentialBadge
-                    badge={credential.badge}
-                    badgeStyle={credential.badgeStyle}
-                  />
+              <span className="font-display hidden text-xs text-white/25 sm:block">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <CredentialBadge badge={credential.badge} badgeStyle={credential.badgeStyle} />
 
-                  <div className="flex min-w-0 flex-col gap-2 text-left">
-                    <h3 className="text-xl font-semibold leading-tight text-white sm:text-2xl md:text-3xl">
-                      {credential.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-white/42 sm:text-base">
-          {credential.level ? `${credential.level} - ` : ''}
-                      {credential.issuer}
-                      {credential.status ? ' - ' : ''}
-                      {credential.status ? (
-                        <span className="text-cyan-300">{credential.status}</span>
-                      ) : null}
-                    </p>
-                  </div>
-                </div>
-              </GlowCard>
+              <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
+                <h3 className="font-display text-lg font-medium leading-tight text-white sm:text-xl">
+                  {credential.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-white/45">
+                  {credential.level ? `${credential.level} — ` : ''}
+                  {credential.issuer}
+                  {credential.status ? ' — ' : ''}
+                  {credential.status ? (
+                    <span className="text-cyan-300">{credential.status}</span>
+                  ) : null}
+                </p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -1054,14 +1087,27 @@ function Experience() {
     <Section id="experience">
       <SectionHeading label="Journey" title="Where I got the opportunity." />
 
-      <motion.div variants={stagger} className="mx-auto flex max-w-5xl flex-col gap-6">
-        {EXPERIENCE.map((role) => (
-          <motion.div key={`${role.title}-${role.period}`} variants={fadeUp}>
+      <motion.div variants={stagger} className="mx-auto flex max-w-5xl flex-col">
+        {EXPERIENCE.map((role, index) => (
+          <motion.div
+            key={`${role.title}-${role.period}`}
+            variants={fadeUp}
+            className="relative flex gap-5 pb-10 last:pb-0 md:gap-8"
+          >
+            <div className="relative flex w-6 shrink-0 flex-col items-center md:w-8">
+              <span className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center rounded-full border-2 border-cyan-300 bg-black">
+                <span className="h-1 w-1 rounded-full bg-cyan-300" />
+              </span>
+              {index < EXPERIENCE.length - 1 ? (
+                <span className="mt-1 w-px flex-1 bg-gradient-to-b from-cyan-300/40 via-white/10 to-transparent" />
+              ) : null}
+            </div>
+
             <GlowCard customSize glowColor="green" className="w-full !aspect-auto p-8">
               <div className="relative z-10 flex flex-col gap-5">
                 <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <h3 className="text-2xl font-medium text-white">{role.title}</h3>
+                    <h3 className="font-display text-2xl font-medium text-white">{role.title}</h3>
                     <p className="mt-1 text-sm uppercase tracking-[0.24em] text-cyan-300/80">
                       {role.organization}
                     </p>
@@ -1069,7 +1115,7 @@ function Experience() {
                   <span className="text-sm font-medium text-white/55">{role.period}</span>
                 </div>
 
-                <details className="group rounded-lg border border-white/10 bg-white/[0.03] px-5 py-4">
+                <details className="group rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4">
                   <summary className="cursor-pointer list-none text-sm font-medium text-white/75 transition-colors group-open:text-white">
                     View details
                   </summary>
@@ -1087,7 +1133,7 @@ function Experience() {
                             className="flex flex-col gap-3"
                           >
                             <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                              <h4 className="text-lg font-medium text-white">
+                              <h4 className="font-display text-lg font-medium text-white">
                                 {highlight.heading}
                               </h4>
                               <span className="text-sm text-white/45">
@@ -1126,7 +1172,7 @@ function Skills() {
         variants={stagger}
         className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
       >
-        {SKILL_GROUPS.map(({ color, icon: Icon, skills, title }) => (
+        {SKILL_GROUPS.map(({ color, icon: Icon, skills, title }, index) => (
           <motion.div key={title} variants={fadeUp}>
             <GlowCard
               customSize
@@ -1134,11 +1180,16 @@ function Skills() {
               className="flex h-full w-full !aspect-auto flex-col gap-5 p-8"
             >
               <div className="relative z-10 flex flex-col gap-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
-                    <Icon className="h-5 w-5 text-cyan-300" />
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
+                      <Icon className="h-5 w-5 text-cyan-300" />
+                    </div>
+                    <h3 className="font-display text-lg font-medium text-white">{title}</h3>
                   </div>
-                  <h3 className="text-lg font-medium text-white">{title}</h3>
+                  <span className="font-display text-xs text-white/25">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -1202,7 +1253,7 @@ function Projects() {
         variants={stagger}
         className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2"
       >
-        {PROJECTS.map((project) => {
+        {PROJECTS.map((project, index) => {
           const Icon = project.icon;
 
           return (
@@ -1218,9 +1269,14 @@ function Projects() {
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
                         <Icon className="h-5 w-5 text-cyan-300" />
                       </div>
-                      <h3 className="text-lg font-medium leading-snug text-white">
-                        {project.title}
-                      </h3>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-display text-[11px] text-white/30">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <h3 className="font-display text-lg font-medium leading-snug text-white">
+                          {project.title}
+                        </h3>
+                      </div>
                     </div>
                     <ProjectLinks github={project.github} live={project.live} />
                   </div>
@@ -1320,7 +1376,7 @@ function Contact() {
               target={href.startsWith('mailto:') ? undefined : '_blank'}
               rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={label}
-              className="flex h-14 w-14 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-cyan-400/30 hover:bg-cyan-400/8 hover:text-cyan-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-cyan-400/30 hover:bg-cyan-400/8 hover:text-cyan-300"
             >
               <Icon className="h-5 w-5" />
             </motion.a>

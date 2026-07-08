@@ -1,12 +1,18 @@
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 import './globals.css';
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-display',
 });
 
 export const metadata: Metadata = {
@@ -21,7 +27,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={outfit.variable}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body>{children}</body>
     </html>
   );

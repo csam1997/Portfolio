@@ -87,7 +87,7 @@ a {
   background:
     radial-gradient(circle at 46% 44%, rgba(103, 232, 249, 0.16), transparent 34%),
     conic-gradient(from 220deg, transparent, rgba(52, 211, 153, 0.18), transparent 34%, rgba(251, 191, 36, 0.15), transparent 67%);
-  opacity: 0.72;
+  opacity: 0.5;
 }
 
 .hero-atmosphere-mid {
@@ -99,7 +99,7 @@ a {
     linear-gradient(120deg, transparent 38%, rgba(103, 232, 249, 0.18) 39% 40%, transparent 41%),
     linear-gradient(26deg, transparent 44%, rgba(52, 211, 153, 0.14) 45% 46%, transparent 47%),
     linear-gradient(154deg, transparent 52%, rgba(251, 191, 36, 0.12) 53% 54%, transparent 55%);
-  opacity: 0.66;
+  opacity: 0.44;
 }
 
 .hero-depth-lanes {
@@ -268,18 +268,18 @@ a {
       var(--hue, 210)
       calc(var(--saturation, 100) * 1%)
       calc(var(--lightness, 50) * 1%)
-      / var(--border-spot-opacity, 1)
+      / var(--border-spot-opacity, 0.55)
     ),
     transparent 100%
   );
-  filter: brightness(2);
+  filter: brightness(1.5);
 }
 
 [data-glow]::after {
   background-image: radial-gradient(
     calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
       calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
-    hsl(0 100% 100% / var(--border-light-opacity, 1)),
+    hsl(0 100% 100% / var(--border-light-opacity, 0.4)),
     transparent 100%
   );
 }
