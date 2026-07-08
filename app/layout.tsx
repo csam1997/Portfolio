@@ -10,8 +10,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: 'Security & QA Portfolio',
-  description: 'A personal portfolio for security engineering and QA work.',
+  title: 'Chiranjib Samantaray — Cloud, Systems & Identity Portfolio',
+  description:
+    'Portfolio of Chiranjib Samantaray: Azure cloud administration, Windows/Linux systems engineering, identity & access management (IAM), and QA automation.',
 };
 
 export default function RootLayout({

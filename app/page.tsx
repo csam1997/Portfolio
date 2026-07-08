@@ -18,15 +18,16 @@ import {
   Bug,
   Camera,
   ChevronDown,
+  Cloud,
   ExternalLink,
   FileSearch,
   FolderGit2,
-  Gamepad2,
   Link2,
   Lock,
   Mail,
   MapPin,
   Menu,
+  Server,
   Shield,
   Terminal,
   X,
@@ -84,126 +85,159 @@ const NAV_LINKS: NavLink[] = [
 
 const STATS = [
   { value: '5+', label: 'Years Experience' },
-  { value: '40+', label: 'Projects Shipped' },
+  { value: '8', label: 'Home Lab Projects' },
   { value: '200+', label: 'Tests Automated' },
-  { value: '8', label: 'Certifications' },
+  { value: '3', label: 'Certifications' },
 ];
 
 const SKILL_GROUPS: SkillGroup[] = [
   {
-    icon: Bug,
-    title: 'QA Automation & Testing',
-    color: 'green',
+    icon: Terminal,
+    title: 'Windows & Systems Administration',
+    color: 'blue',
     skills: [
-      'Selenium WebDriver',
-      'Pytest',
-      'TestNG',
-      'JUnit',
-      'BDD / Cucumber / Gherkin',
-      'Functional Testing',
-      'Regression Testing',
-      'UAT Support',
-      'Test Case Design',
-      'Defect Lifecycle Management',
+      'Windows Server 2022',
+      'Active Directory (AD DS)',
+      'DNS / DHCP',
+      'Group Policy (GPO)',
+      'OUs, Users & Groups',
+      'File Services & NTFS Permissions',
+      'Windows 10/11',
     ],
   },
   {
-    icon: Activity,
-    title: 'API & Delivery',
-    color: 'blue',
+    icon: Server,
+    title: 'Linux Administration',
+    color: 'green',
     skills: [
-      'Postman',
-      'REST API Testing',
-      'Payload Validation',
-      'Authentication Testing',
-      'Integration Testing',
-      'Jenkins',
-      'Git / GitHub',
-      'Build Pipeline Validation',
-      'JIRA',
-      'Zephyr',
-      'Agile / Scrum',
-      'Defect Triage',
+      'Ubuntu / Linux',
+      'SSH & sudo',
+      'systemd & journalctl',
+      'UFW & Nginx',
+      'Cron & Package Management',
+      'Bash Scripting',
+    ],
+  },
+  {
+    icon: Cloud,
+    title: 'Cloud & Infrastructure as Code',
+    color: 'purple',
+    skills: [
+      'Azure VMs, VNets & NSGs',
+      'Azure RBAC & Storage Accounts',
+      'Load Balancer & Key Vault',
+      'Terraform (Modules, Remote State)',
+      'Bicep & ARM Templates',
+      'Azure CLI',
+      'GitHub Actions / Azure DevOps CI-CD',
     ],
   },
   {
     icon: Shield,
-    title: 'Identity & Access Security',
-    color: 'purple',
+    title: 'Identity & Access Management',
+    color: 'orange',
     skills: [
-      'IAM',
-      'RBAC',
-      'Active Directory',
-      'Azure AD / Entra ID',
-      'SSO',
-      'MFA',
-      'Provisioning / Deprovisioning',
-      'Access Reviews',
-      'Account Lifecycle Controls',
-      'Least Privilege',
-      'Authentication Flow Validation',
+      'Microsoft Entra ID',
+      'Active Directory & Group-Based Access',
+      'SSO, MFA & Conditional Access',
+      'SAML 2.0 / OAuth 2.0 / OIDC',
+      'Joiner-Mover-Leaver Lifecycle',
+      'Access Recertification & Least Privilege',
+      'Okta (Federation Projects)',
+    ],
+  },
+  {
+    icon: Bug,
+    title: 'QA Automation & Testing',
+    color: 'blue',
+    skills: [
+      'Playwright (Python / pytest)',
+      'Selenium WebDriver & Page Object Model',
+      'TestNG / JUnit / Cucumber (BDD)',
+      'Postman & Newman API Testing',
+      'JSON Schema & Data Validation',
+      'Cross-Browser & Regression Testing',
     ],
   },
   {
     icon: FileSearch,
-    title: 'Security Operations & Analysis',
-    color: 'orange',
+    title: 'Delivery, Monitoring & Ops',
+    color: 'green',
     skills: [
-      'Incident Triage',
-      'Authentication Issue Investigation',
-      'Escalation Management',
-      'Root-Cause Documentation',
-      'Audit Support',
-      'Splunk',
-      'Wireshark',
-      'Nmap',
-      'Vulnerability Scanning Fundamentals',
-    ],
-  },
-  {
-    icon: Terminal,
-    title: 'Systems & Platforms',
-    color: 'blue',
-    skills: [
-      'Windows Server',
-      'Linux / Unix',
-      'ServiceNow ITSM',
-      'JIRA',
-      'API Validation',
-      'Python',
-      'Bash',
+      'Jenkins & GitHub Actions',
+      'Git / GitHub & Azure DevOps',
+      'JIRA, Zephyr & ServiceNow ITSM',
+      'Azure Monitor & Log Analytics (KQL)',
+      'Incident, Change & Root-Cause Docs',
+      'PowerShell, Python & Bash',
     ],
   },
 ];
 
 const PROJECTS: Project[] = [
   {
-    icon: Lock,
-    title: 'TrusLex',
+    icon: Terminal,
+    title: 'Windows & Hybrid Identity Operations Lab',
     description:
-      'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
-    tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
-    color: 'green',
-    github: 'https://github.com/csam1997/TrusLex',
-    live: 'https://csam1997.github.io/TrusLex/',
-  },
-  {
-    icon: Activity,
-    title: 'Meals-on-Wheels',
-    description:
-      'An end-to-end automation framework built for parallel execution, visual regression checks, and reliable CI pipelines.',
-    tags: ['Playwright', 'TypeScript', 'CI/CD', 'Docker'],
+      'A multi-VM Windows Server domain with a domain controller, file server, and Windows 11 client — OUs, GPOs, DNS/DHCP, and scoped Entra Connect Sync to test hybrid identity, provisioning/deprovisioning, and SSO concepts.',
+    tags: ['Windows Server 2022', 'AD DS', 'GPO', 'Entra Connect Sync', 'PowerShell'],
     color: 'blue',
   },
   {
-    icon: FileSearch,
-    title: 'AI Trip Planner',
+    icon: Cloud,
+    title: 'Multi-Environment Azure IaC with Terraform',
     description:
-      'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
+      'Reusable Terraform modules for resource groups, networking, VMs, storage, and Key Vault, deployed across dev/prod via workspaces with a remote backend, an OIDC-authenticated GitHub Actions pipeline, and Entra-based RBAC.',
+    tags: ['Terraform', 'Azure', 'GitHub Actions', 'OIDC', 'Key Vault'],
+    color: 'purple',
+  },
+  {
+    icon: Activity,
+    title: 'Azure Administration, Monitoring & Cost Ops Lab',
+    description:
+      'A Bicep + PowerShell deployment of a tagged, locked Azure environment with Log Analytics alerting, KQL queries for RBAC/NSG changes and sign-in failures, and Azure Backup / Update Manager operations.',
+    tags: ['Bicep', 'PowerShell', 'Azure Monitor', 'KQL', 'Azure Backup'],
+    color: 'blue',
+  },
+  {
+    icon: Server,
+    title: 'Linux Server Administration & Automation Lab',
+    description:
+      'Ubuntu servers administered end to end — users, sudo, SSH keys, systemd services, UFW, Nginx, and cron — with Bash health checks and documented incident recovery for CPU, memory, disk, and service conditions.',
+    tags: ['Ubuntu Server', 'SSH', 'systemd', 'Bash', 'UFW / Nginx'],
+    color: 'green',
+  },
+  {
+    icon: Shield,
+    title: 'Enterprise IAM Operations & Access Governance Lab',
+    description:
+      '10+ modeled identities with joiner-mover-leaver, contractor-expiration, and urgent-offboarding workflows validated through ServiceNow approvals, Microsoft Graph PowerShell automation, and Azure RBAC access recertification.',
+    tags: ['Microsoft Entra ID', 'ServiceNow PDI', 'Graph PowerShell', 'Azure RBAC'],
     color: 'orange',
-    github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
-    live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
+  },
+  {
+    icon: Lock,
+    title: 'SSO & Federation Integration Lab',
+    description:
+      'Test applications integrated via OIDC/OAuth 2.0 and SAML SSO with group/app-role assignment and MFA, troubleshooting redirect URI, claims, and token issues documented in a reproducible support runbook.',
+    tags: ['Okta', 'OIDC / OAuth 2.0', 'SAML 2.0', 'Postman'],
+    color: 'purple',
+  },
+  {
+    icon: Bug,
+    title: 'Full-Stack Test Automation Framework',
+    description:
+      'A layered Playwright/pytest framework validating UI, API, and PostgreSQL data together — headless parallel execution in GitHub Actions with Allure reporting, flaky-test quarantine, and automatic ServiceNow ticket creation on failures.',
+    tags: ['Playwright', 'pytest', 'PostgreSQL', 'GitHub Actions', 'Allure'],
+    color: 'green',
+  },
+  {
+    icon: FileSearch,
+    title: 'Enterprise Selenium BDD Regression Framework',
+    description:
+      'A Cucumber + Page Object Model framework covering login, RBAC, and access-denied journeys, paired with a Postman/Newman API layer and a Jenkins pipeline running parallel TestNG execution with smoke gates.',
+    tags: ['Selenium', 'TestNG', 'Cucumber', 'Jenkins', 'Postman/Newman'],
+    color: 'orange',
   },
 ];
 
@@ -222,39 +256,35 @@ const EXPERIENCE = [
       'Cognizant Technology Solutions - Banking & Financial Services Client, India',
     period: '2019-2024',
     summary:
-      'Progressed from manual QA into building automation frameworks, API regression suites, and IAM-related validation pipelines for enterprise banking applications.',
+      'Progressed from manual QA into automation framework development, Active Directory/Azure access validation, and identity governance for enterprise banking applications.',
     highlights: [
       {
-        heading: 'IAM & Access Validation',
+        heading: 'Identity & Access Validation',
         period: '2022-2024',
         bullets: [
-          'Tested RBAC, provisioning, deprovisioning, and role-change workflows for enterprise banking applications, improving reliability across access lifecycle processes.',
-          'Triaged ServiceNow tickets tied to access incidents and change requests, maintaining evidence, escalation notes, and SLA-aware documentation for cross-functional teams.',
-          'Validated Active Directory integrations, user account states, group-based entitlements, and authentication behavior across Windows-based enterprise environments.',
-          'Supported onboarding and offboarding validation by checking access assignments, deactivation behavior, and downstream permissions across enterprise systems.',
+          'Validated RBAC, provisioning/deprovisioning, role-change, onboarding, and offboarding workflows for enterprise banking applications, improving reliability of access-lifecycle controls.',
+          'Verified Active Directory account states, group-based entitlements, downstream permissions, and SSO/MFA authentication behavior across Windows-based enterprise environments.',
+          'Validated Azure RBAC outcomes and Active Directory-dependent group/role mappings for regulated banking applications.',
+          'Triaged ServiceNow access incidents and change requests with reproducible evidence, SLA-aware notes, escalation details, and retest results for IAM, support, and development teams.',
         ],
       },
       {
-        heading: 'Automation & API Regression Testing',
+        heading: 'Automation & API Regression',
         period: '2020-2022',
         bullets: [
-          'Built and maintained Python- and Java-based Selenium automation using Page Object Model (POM), reducing repetitive manual effort by 45% and improving sprint-level test throughput.',
-          'Implemented TestNG and JUnit runners to organize regression packs, manage parallel execution, and produce structured reports for stakeholder review.',
-          'Authored BDD feature files using Cucumber and Gherkin to align test scenarios with business requirements and improve collaboration across QA, engineering, and business teams.',
-          'Integrated Selenium regression suites into Jenkins CI pipelines, enabling automated regression on each build and reducing post-deployment defect leakage.',
-          'Developed Postman API test suites to validate REST endpoints, payload integrity, authentication responses, and negative scenarios across QA and pre-production environments.',
-          'Managed test cases and execution cycles in Zephyr, maintaining structured coverage matrices and retest evidence tied to JIRA defect records.',
-          'Maintained detailed defect logs, retest evidence, and reusable automation assets that improved defect turnaround and QA handoffs.',
+          'Designed and maintained Selenium (Python/Java) Page Object Model frameworks with TestNG/JUnit suites and parallel execution, reducing repeatable manual validation 45% and improving sprint-level throughput.',
+          'Authored Cucumber/Gherkin BDD scenarios and Postman REST API suites (payload, schema, and negative validation), integrated into Jenkins CI with build-triggered regression execution.',
+          'Validated authentication-dependent APIs and payload/schema integrity across QA and pre-production, including cloud-connected application behavior.',
+          'Managed Zephyr/JIRA test cycles, coverage matrices, defect records, retest evidence, and release-readiness documentation across Agile delivery cycles.',
         ],
       },
       {
         heading: 'Manual QA & Defect Validation',
         period: '2019-2020',
         bullets: [
-          'Executed manual functional, smoke, and sanity testing for enterprise web applications and authentication portals, documenting reproducible defects and release-readiness risks in JIRA.',
-          'Translated user stories and business requirements into structured test cases, negative scenarios, and defect evidence that helped developers resolve issues earlier in the cycle.',
-          'Supported end-to-end validation of access-related workflows, helping teams catch UI, data, and permission defects before production handoff.',
-          'Partnered with developers and business teams during defect triage and retesting, helping move validated fixes back into the release cycle faster.',
+          'Created and executed functional, smoke, sanity, and regression test cases from business requirements and user stories, documenting defects and release-impact evidence in JIRA.',
+          'Supported end-to-end validation of access-related workflows, catching UI, data, and permission defects before production handoff.',
+          'Partnered with developers and business teams during defect triage and retesting to move validated fixes back into the release cycle faster.',
         ],
       },
     ],
@@ -271,9 +301,9 @@ const EDUCATION = [
       'Network Security',
       'Computer Network Defense',
       'Cloud Computing',
-      'E-Commerce Security',
-      'Trustworthy AI',
+      'Unix Systems Administration',
       'Computer System Architecture',
+      'Management of Information & Systems Security',
     ],
   },
   {
@@ -288,6 +318,13 @@ const CREDENTIALS: Credential[] = [
   {
     badge: 'MS',
     badgeStyle: 'azure',
+    title: 'Azure Administrator Associate',
+    issuer: 'Microsoft',
+    level: 'AZ-104',
+  },
+  {
+    badge: 'MS',
+    badgeStyle: 'azure',
     title: 'Azure Fundamentals',
     issuer: 'Microsoft',
     level: 'AZ-900',
@@ -295,40 +332,9 @@ const CREDENTIALS: Credential[] = [
   {
     badge: 'MS',
     badgeStyle: 'azure',
-    title: 'Azure Administrator Associate',
-    issuer: 'Microsoft',
-    level: 'AZ-104',
-    status: 'In Progress',
-  },
-  {
-    badge: 'MS',
-    badgeStyle: 'azure',
-    title: 'Azure Security Engineer Associate',
-    issuer: 'Microsoft',
-    level: 'AZ-500',
-    status: 'In Progress',
-  },
-  {
-    badge: 'ISC2',
-    badgeStyle: 'green',
-    title: 'Certified in Cybersecurity',
-    issuer: 'ISC2',
-    level: 'CC',
-    status: 'In Progress',
-  },
-  {
-    badge: 'CTTC',
-    badgeStyle: 'gold',
-    title: 'MATLAB & Simulink',
-    issuer: 'MSME, Govt. of India',
-    level: 'CTTC',
-  },
-  {
-    badge: 'CTTC',
-    badgeStyle: 'gold',
-    title: 'PLC & SCADA',
-    issuer: 'MSME, Govt. of India',
-    level: 'CTTC',
+    title: 'Copilot and Agent Administration Fundamentals',
+    issuer: 'Microsoft 365',
+    level: 'AB-900',
   },
 ];
 
@@ -403,9 +409,9 @@ const OFF_SCREEN: BentoMediaItem[] = [
 ];
 
 const HERO_SIGNALS = [
-  { value: 'Cloud Security', label: 'Azure, identity, and governance' },
-  { value: 'Quality Engineering', label: 'Automation and release confidence' },
-  { value: 'Platform Work', label: 'Systems, evidence, and delivery' },
+  { value: 'Cloud & Systems', label: 'Azure, Windows Server, and Linux administration' },
+  { value: 'Identity & Access', label: 'Entra ID, Active Directory, RBAC, SSO/MFA' },
+  { value: 'QA Automation', label: 'Selenium, Playwright, and CI/CD pipelines' },
 ];
 
 const HERO_LANES = [
@@ -762,7 +768,7 @@ function Hero() {
           transition={{ delay: 0.7, duration: 0.6 }}
           className="text-lg font-light uppercase tracking-widest text-white/70 drop-shadow-[0_2px_20px_rgba(0,0,0,0.75)] md:text-xl"
         >
-          Learning to secure the world.
+          Automating systems. Securing identity.
         </motion.p>
 
         <motion.p
@@ -772,9 +778,11 @@ function Hero() {
           className="max-w-xl text-base leading-relaxed text-white/58 drop-shadow-[0_2px_18px_rgba(0,0,0,0.82)] md:text-lg"
         >
           Cybersecurity graduate student with nearly 5 years of enterprise
-          experience in IAM, cloud identity, and automation for banking and
-          financial services. Targeting Quality Engineer, Cloud Security, Cloud
-          Administration, and Cloud Engineering roles.
+          experience across Windows Server &amp; Linux administration, Azure
+          cloud infrastructure, identity &amp; access management, and QA
+          automation for banking and financial services. Targeting Systems
+          Engineer, Cloud Administrator, IAM Analyst/Engineer, and QA
+          Automation Engineer roles.
         </motion.p>
 
         <motion.div
@@ -845,16 +853,19 @@ function About() {
               <p className="text-base leading-relaxed text-white/80">
                 Cybersecurity graduate student at The George Washington University
                 (M.S., May 2026) with nearly 5 years of enterprise experience at
-                Cognizant, specializing in IAM, cloud identity, and automation for
-                banking and financial services. Hands-on expertise with Microsoft
-                Azure, Active Directory, privileged access management, RBAC, and
-                ServiceNow ITSM.
+                Cognizant, spanning Windows Server &amp; Active Directory
+                administration, Linux, Azure infrastructure as code, identity
+                &amp; access management, and QA automation for banking and
+                financial services. Hands-on with Terraform, Bicep, PowerShell,
+                Microsoft Entra ID, RBAC, and ServiceNow ITSM.
               </p>
 
               <p className="text-base leading-relaxed text-white/60">
-                Currently deepening my expertise in network defense, cloud
-                security, penetration testing, and trustworthy AI, with the goal
-                of transitioning into a full-time cybersecurity analyst role.
+                Currently deepening my expertise in cloud security, network
+                defense, and infrastructure automation through hands-on
+                home-lab work, with the goal of transitioning into a full-time
+                Systems Engineer, Cloud Administrator, or Identity &amp; Access
+                Management role.
               </p>
             </div>
           </GlowCard>
@@ -1241,12 +1252,12 @@ function Projects() {
 function Contact() {
   const contactLinks = [
     {
-      href: 'https://github.com/',
+      href: 'https://github.com/csam1997',
       icon: FolderGit2,
       label: 'GitHub',
     },
     {
-      href: 'https://www.linkedin.com/',
+      href: 'https://www.linkedin.com/in/chiranjib-samantaray',
       icon: Link2,
       label: 'LinkedIn',
     },
@@ -1256,7 +1267,7 @@ function Contact() {
       label: 'Instagram',
     },
     {
-      href: 'mailto:chiranjib.samantaray@gwu.edu',
+      href: 'mailto:samantaray.chiranjib97@gmail.com',
       icon: Mail,
       label: 'Email',
     },
@@ -1292,11 +1303,11 @@ function Contact() {
           </motion.div>
           <motion.a
             variants={fadeUp}
-            href="mailto:chiranjib.samantaray@gwu.edu"
+            href="mailto:samantaray.chiranjib97@gmail.com"
             className="flex items-center justify-center gap-3 text-lg text-white/70 transition-colors hover:text-white"
           >
             <Mail className="h-5 w-5 text-cyan-300" />
-            <span>chiranjib.samantaray@gwu.edu</span>
+            <span>samantaray.chiranjib97@gmail.com</span>
           </motion.a>
         </motion.div>
 
