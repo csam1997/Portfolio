@@ -1,23 +1,13 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import type { CSSProperties, ReactNode } from 'react';
-import {
-  motion,
-  AnimatePresence,
-  useInView,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
-import type { MotionValue } from 'framer-motion';
+import type { ReactNode } from 'react';
+import { AnimatePresence, motion, useInView, useScroll, useSpring } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
   Bug,
   Camera,
-  ChevronDown,
   Cloud,
   ExternalLink,
   FileSearch,
@@ -36,15 +26,13 @@ import {
 import InteractiveBentoGallery, {
   type BentoMediaItem,
 } from '@/components/ui/interactive-bento-gallery';
-import InteractiveNeuralVortexBackground from '@/components/ui/interactive-neural-vortex-background';
-import { GlowCard } from '@/components/ui/spotlight-card';
 
 type NavLink = {
   href: string;
   label: string;
 };
 
-type AccentColor = 'blue' | 'green' | 'orange' | 'purple';
+type AccentColor = 'amber' | 'orange' | 'rose' | 'sky' | 'teal' | 'violet';
 
 type SkillGroup = {
   color: AccentColor;
@@ -65,11 +53,47 @@ type Project = {
 
 type Credential = {
   badge: string;
-  badgeStyle: 'azure' | 'green' | 'gold';
+  badgeStyle: 'azure' | 'gold' | 'green';
   issuer: string;
   level?: string;
   status?: string;
   title: string;
+};
+
+const ACCENT_STYLES: Record<
+  AccentColor,
+  { chip: string; icon: string; tag: string }
+> = {
+  amber: {
+    chip: 'border-amber-400/25 bg-amber-400/15',
+    icon: 'text-amber-300',
+    tag: 'border-amber-400/25 bg-amber-400/10 text-amber-200',
+  },
+  orange: {
+    chip: 'border-orange-400/25 bg-orange-400/15',
+    icon: 'text-orange-300',
+    tag: 'border-orange-400/25 bg-orange-400/10 text-orange-200',
+  },
+  rose: {
+    chip: 'border-rose-400/25 bg-rose-400/15',
+    icon: 'text-rose-300',
+    tag: 'border-rose-400/25 bg-rose-400/10 text-rose-200',
+  },
+  sky: {
+    chip: 'border-sky-400/25 bg-sky-400/15',
+    icon: 'text-sky-300',
+    tag: 'border-sky-400/25 bg-sky-400/10 text-sky-200',
+  },
+  teal: {
+    chip: 'border-teal-400/25 bg-teal-400/15',
+    icon: 'text-teal-300',
+    tag: 'border-teal-400/25 bg-teal-400/10 text-teal-200',
+  },
+  violet: {
+    chip: 'border-violet-400/25 bg-violet-400/15',
+    icon: 'text-violet-300',
+    tag: 'border-violet-400/25 bg-violet-400/10 text-violet-200',
+  },
 };
 
 const NAV_LINKS: NavLink[] = [
@@ -94,7 +118,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Terminal,
     title: 'Windows & Systems Administration',
-    color: 'blue',
+    color: 'sky',
     skills: [
       'Windows Server 2022',
       'Active Directory (AD DS)',
@@ -108,7 +132,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Server,
     title: 'Linux Administration',
-    color: 'green',
+    color: 'teal',
     skills: [
       'Ubuntu / Linux',
       'SSH & sudo',
@@ -121,7 +145,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Cloud,
     title: 'Cloud & Infrastructure as Code',
-    color: 'purple',
+    color: 'violet',
     skills: [
       'Azure VMs, VNets & NSGs',
       'Azure RBAC & Storage Accounts',
@@ -135,7 +159,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Shield,
     title: 'Identity & Access Management',
-    color: 'orange',
+    color: 'amber',
     skills: [
       'Microsoft Entra ID',
       'Active Directory & Group-Based Access',
@@ -149,7 +173,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Bug,
     title: 'QA Automation & Testing',
-    color: 'blue',
+    color: 'rose',
     skills: [
       'Playwright (Python / pytest)',
       'Selenium WebDriver & Page Object Model',
@@ -162,7 +186,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: FileSearch,
     title: 'Delivery, Monitoring & Ops',
-    color: 'green',
+    color: 'orange',
     skills: [
       'Jenkins & GitHub Actions',
       'Git / GitHub & Azure DevOps',
@@ -181,7 +205,7 @@ const PROJECTS: Project[] = [
     description:
       'A multi-VM Windows Server domain with a domain controller, file server, and Windows 11 client — OUs, GPOs, DNS/DHCP, and scoped Entra Connect Sync to test hybrid identity, provisioning/deprovisioning, and SSO concepts.',
     tags: ['Windows Server 2022', 'AD DS', 'GPO', 'Entra Connect Sync', 'PowerShell'],
-    color: 'blue',
+    color: 'sky',
   },
   {
     icon: Cloud,
@@ -189,7 +213,7 @@ const PROJECTS: Project[] = [
     description:
       'Reusable Terraform modules for resource groups, networking, VMs, storage, and Key Vault, deployed across dev/prod via workspaces with a remote backend, an OIDC-authenticated GitHub Actions pipeline, and Entra-based RBAC.',
     tags: ['Terraform', 'Azure', 'GitHub Actions', 'OIDC', 'Key Vault'],
-    color: 'purple',
+    color: 'violet',
   },
   {
     icon: Activity,
@@ -197,7 +221,7 @@ const PROJECTS: Project[] = [
     description:
       'A Bicep + PowerShell deployment of a tagged, locked Azure environment with Log Analytics alerting, KQL queries for RBAC/NSG changes and sign-in failures, and Azure Backup / Update Manager operations.',
     tags: ['Bicep', 'PowerShell', 'Azure Monitor', 'KQL', 'Azure Backup'],
-    color: 'blue',
+    color: 'amber',
   },
   {
     icon: Server,
@@ -205,7 +229,7 @@ const PROJECTS: Project[] = [
     description:
       'Ubuntu servers administered end to end — users, sudo, SSH keys, systemd services, UFW, Nginx, and cron — with Bash health checks and documented incident recovery for CPU, memory, disk, and service conditions.',
     tags: ['Ubuntu Server', 'SSH', 'systemd', 'Bash', 'UFW / Nginx'],
-    color: 'green',
+    color: 'teal',
   },
   {
     icon: Shield,
@@ -221,7 +245,7 @@ const PROJECTS: Project[] = [
     description:
       'Test applications integrated via OIDC/OAuth 2.0 and SAML SSO with group/app-role assignment and MFA, troubleshooting redirect URI, claims, and token issues documented in a reproducible support runbook.',
     tags: ['Okta', 'OIDC / OAuth 2.0', 'SAML 2.0', 'Postman'],
-    color: 'purple',
+    color: 'violet',
   },
   {
     icon: Bug,
@@ -229,7 +253,7 @@ const PROJECTS: Project[] = [
     description:
       'A layered Playwright/pytest framework validating UI, API, and PostgreSQL data together — headless parallel execution in GitHub Actions with Allure reporting, flaky-test quarantine, and automatic ServiceNow ticket creation on failures.',
     tags: ['Playwright', 'pytest', 'PostgreSQL', 'GitHub Actions', 'Allure'],
-    color: 'green',
+    color: 'rose',
   },
   {
     icon: FileSearch,
@@ -245,7 +269,7 @@ const PROJECTS: Project[] = [
     description:
       'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
     tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
-    color: 'green',
+    color: 'teal',
     github: 'https://github.com/csam1997/TrusLex',
     live: 'https://csam1997.github.io/TrusLex/',
   },
@@ -255,7 +279,7 @@ const PROJECTS: Project[] = [
     description:
       'An end-to-end automation framework built for parallel execution, visual regression checks, and reliable CI pipelines.',
     tags: ['Playwright', 'TypeScript', 'CI/CD', 'Docker'],
-    color: 'blue',
+    color: 'sky',
   },
   {
     icon: FileSearch,
@@ -263,7 +287,7 @@ const PROJECTS: Project[] = [
     description:
       'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
     tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
-    color: 'orange',
+    color: 'amber',
     github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
     live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
   },
@@ -449,18 +473,12 @@ const HERO_SIGNALS = [
   { value: 'QA Automation', label: 'Selenium, Playwright, and CI/CD pipelines' },
 ];
 
-const HERO_LANES = [
-  { width: '38%', x: '8%', y: '28%', delay: '-1.2s' },
-  { width: '28%', x: '64%', y: '18%', delay: '-3.8s' },
-  { width: '46%', x: '42%', y: '62%', delay: '-5.1s' },
-];
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
   },
 };
 
@@ -470,8 +488,18 @@ const fadeIn = {
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
+
+function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return (
+    <div
+      className={`rounded-3xl border border-white/8 bg-white/[0.035] shadow-[0_24px_60px_-32px_rgba(0,0,0,0.7)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/14 hover:bg-white/[0.055] hover:shadow-[0_32px_75px_-28px_rgba(0,0,0,0.75)] ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 function Section({
   children,
@@ -484,18 +512,6 @@ function Section({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const inView = useInView(ref, { once: true, margin: '-80px 0px' });
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 26,
-    mass: 0.28,
-  });
-  const fieldY = useTransform(smoothProgress, [0, 1], [150, -150]);
-  const fieldX = useTransform(smoothProgress, [0, 1], [-46, 46]);
-  const fieldRotate = useTransform(smoothProgress, [0, 1], [-2.5, 2.5]);
 
   return (
     <motion.section
@@ -504,16 +520,9 @@ function Section({
       variants={stagger}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
-      className={`relative z-10 px-6 py-20 md:px-10 lg:px-16 ${className}`}
+      className={`relative px-6 py-20 md:px-10 lg:px-16 ${className}`}
     >
-      <motion.div
-        aria-hidden="true"
-        className="section-depth-field"
-        animate={{ opacity: inView ? 0.7 : 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        style={{ x: fieldX, y: fieldY, rotate: fieldRotate }}
-      />
-      <div className="relative z-10">{children}</div>
+      {children}
     </motion.section>
   );
 }
@@ -521,14 +530,13 @@ function Section({
 function SectionHeading({ label, title }: { label: string; title: string }) {
   return (
     <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
-      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
-        <span className="h-1 w-1 rounded-full bg-cyan-300" />
+      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-300">
+        <span className="h-1 w-1 rounded-full bg-amber-300" />
         {label}
       </span>
-      <h2 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
+      <h2 className="font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
         {title}
       </h2>
-      <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -542,20 +550,19 @@ function SectionHeadingStacked({
 }) {
   return (
     <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
-      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
-        <span className="h-1 w-1 rounded-full bg-cyan-300" />
+      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-300">
+        <span className="h-1 w-1 rounded-full bg-amber-300" />
         {label}
       </span>
-      <h2 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
+      <h2 className="font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
         {titleLines.map((line, index) => (
           <span key={`${label}-${line}`} className="block">
-            <span className={index === titleLines.length - 1 ? 'text-white/24' : ''}>
+            <span className={index === titleLines.length - 1 ? 'text-white/30' : ''}>
               {line}
             </span>
           </span>
         ))}
       </h2>
-      <div className="mx-auto mt-5 h-px w-16 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
     </motion.div>
   );
 }
@@ -567,18 +574,20 @@ function Navbar() {
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-black/40 px-6 py-4 backdrop-blur-xl md:px-12"
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-[#0b1120]/80 px-6 py-4 backdrop-blur-xl md:px-10"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-br from-cyan-300 to-emerald-300" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 font-display text-sm font-bold text-slate-950">
+            C
+          </span>
           <span className="font-display text-base font-semibold tracking-tight text-white">
-            Chiranjib<span className="text-white/40">.dev</span>
+            Chiranjib Samantaray
           </span>
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
@@ -592,7 +601,7 @@ function Navbar() {
           <li className="ml-2">
             <a
               href="#contact"
-              className="rounded-full border border-cyan-300/35 px-5 py-2 text-sm font-medium text-white transition-all duration-200 hover:border-emerald-300 hover:bg-emerald-300/10"
+              className="rounded-full bg-amber-400 px-5 py-2 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-amber-300"
             >
               Hire Me
             </a>
@@ -601,7 +610,7 @@ function Navbar() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:text-white md:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:text-white lg:hidden"
           onClick={() => setIsOpen((current) => !current)}
           aria-expanded={isOpen}
           aria-label="Toggle menu"
@@ -616,7 +625,7 @@ function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mt-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/70 px-6 py-6 backdrop-blur-xl md:hidden"
+            className="mt-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-[#0b1120]/95 px-6 py-6 backdrop-blur-xl lg:hidden"
           >
             {NAV_LINKS.map((link) => (
               <a
@@ -631,7 +640,7 @@ function Navbar() {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="rounded-lg border border-cyan-300/35 px-5 py-2 text-center text-sm text-white"
+              className="rounded-full bg-amber-400 px-5 py-2 text-center text-sm font-semibold text-slate-950"
             >
               Hire Me
             </a>
@@ -652,168 +661,59 @@ function ScrollProgressBar() {
 
   return (
     <motion.div
-      className="fixed left-0 right-0 top-0 z-[70] h-px origin-left bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300"
+      className="fixed left-0 right-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400"
       style={{ scaleX }}
       aria-hidden="true"
     />
   );
 }
 
-function HeroVisualStage({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
-  const prefersReducedMotion = useReducedMotion();
-  const smoothProgress = useSpring(scrollProgress, {
-    stiffness: 70,
-    damping: 24,
-    mass: 0.35,
-  });
-  const farY = useTransform(smoothProgress, [0, 1], [80, -170]);
-  const midX = useTransform(smoothProgress, [0, 1], [-80, 160]);
-  const midY = useTransform(smoothProgress, [0, 1], [40, -320]);
-  const nearX = useTransform(smoothProgress, [0, 1], [80, -260]);
-  const nearY = useTransform(smoothProgress, [0, 1], [20, -560]);
-  const coreY = useTransform(smoothProgress, [0, 1], [0, -230]);
-  const coreScale = useTransform(smoothProgress, [0, 1], [1, 1.16]);
-  const coreRotate = useTransform(smoothProgress, [0, 1], [0, -14]);
-  const gridY = useTransform(smoothProgress, [0, 1], [0, 260]);
-  const gridOpacity = useTransform(smoothProgress, [0, 0.72, 1], [0.56, 0.34, 0.03]);
-  const stageOpacity = useTransform(smoothProgress, [0, 0.75, 1], [0.9, 0.64, 0.1]);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <motion.div className="hero-depth-grid" style={{ opacity: gridOpacity, y: gridY }} />
-      <motion.div
-        className="hero-atmosphere hero-atmosphere-far"
-        style={{ y: prefersReducedMotion ? 0 : farY, opacity: stageOpacity }}
-      />
-      <motion.div
-        className="hero-atmosphere hero-atmosphere-mid"
-        style={{
-          x: prefersReducedMotion ? 0 : midX,
-          y: prefersReducedMotion ? 0 : midY,
-          opacity: stageOpacity,
-        }}
-      />
-      <motion.div
-        className="hero-stage-wrap"
-        style={{
-          x: prefersReducedMotion ? 0 : nearX,
-          y: prefersReducedMotion ? 0 : nearY,
-          opacity: stageOpacity,
-        }}
-      >
-        <div className="hero-depth-lanes">
-          {HERO_LANES.map((lane) => (
-            <span
-              key={`${lane.x}-${lane.y}`}
-              style={
-                {
-                  '--lane-delay': lane.delay,
-                  '--lane-width': lane.width,
-                  '--lane-x': lane.x,
-                  '--lane-y': lane.y,
-                } as CSSProperties
-              }
-            />
-          ))}
-        </div>
-      </motion.div>
-      <motion.div
-        className="hero-focus-system"
-        style={{
-          y: prefersReducedMotion ? 0 : coreY,
-          scale: prefersReducedMotion ? 1 : coreScale,
-          rotate: prefersReducedMotion ? 0 : coreRotate,
-          opacity: stageOpacity,
-        }}
-      >
-        <motion.div
-          className="hero-focus-ring hero-focus-ring-outer"
-          animate={prefersReducedMotion ? undefined : { rotate: 360 }}
-          transition={{ duration: 42, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="hero-focus-ring hero-focus-ring-inner"
-          animate={prefersReducedMotion ? undefined : { rotate: -360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-        />
-        <div className="hero-focus-core">
-          <Shield className="h-8 w-8 text-cyan-100" />
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
 function Hero() {
-  const ref = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 72,
-    damping: 24,
-    mass: 0.32,
-  });
-  const contentY = useTransform(smoothProgress, [0, 1], [0, -230]);
-  const contentScale = useTransform(smoothProgress, [0, 1], [1, 0.9]);
-  const contentOpacity = useTransform(smoothProgress, [0, 0.72, 1], [1, 0.88, 0]);
-  const signalsY = useTransform(smoothProgress, [0, 1], [0, 170]);
-  const scrollCueOpacity = useTransform(smoothProgress, [0, 0.18], [1, 0]);
-
   return (
-    <section
-      id="top"
-      ref={ref}
-      className="relative z-10 h-[165svh]"
-    >
-      <div className="sticky top-0 flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center">
-        <HeroVisualStage scrollProgress={smoothProgress} />
+    <section id="top" className="relative overflow-hidden px-6 pb-24 pt-40 md:px-10 lg:px-16">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-32 h-[30rem] w-[30rem] rounded-full bg-amber-400/10 blur-[110px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-40 -left-24 h-[26rem] w-[26rem] rounded-full bg-rose-400/8 blur-[110px]"
+      />
 
-      <motion.div
-        style={{ opacity: contentOpacity, scale: contentScale, y: contentY }}
-        className="relative z-10 flex max-w-4xl flex-col items-center gap-6"
-      >
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/8 px-4 py-2 text-xs font-medium uppercase tracking-widest text-cyan-200 backdrop-blur-md"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-xs font-medium uppercase tracking-widest text-amber-200"
         >
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-300" />
           Available for work
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.5,
-            duration: 0.8,
-            ease: [0.25, 0.46, 0.45, 0.94] as const,
-          }}
-          className="font-display text-5xl font-medium leading-none tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.72)] md:text-7xl lg:text-8xl"
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="font-display text-5xl font-semibold leading-[1.04] tracking-tight text-white md:text-7xl"
         >
-          Chiranjib
-          <span className="bg-gradient-to-r from-cyan-200 via-white to-amber-200 bg-clip-text text-transparent">
-            {' '}Samantaray
-          </span>
+          Chiranjib <span className="text-amber-300">Samantaray</span>
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          className="text-lg font-light uppercase tracking-widest text-white/70 drop-shadow-[0_2px_20px_rgba(0,0,0,0.75)] md:text-xl"
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="text-lg font-medium text-white/70 md:text-xl"
         >
           Automating systems. Securing identity.
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          className="max-w-xl text-base leading-relaxed text-white/58 drop-shadow-[0_2px_18px_rgba(0,0,0,0.82)] md:text-lg"
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="max-w-2xl text-base leading-relaxed text-white/55 md:text-lg"
         >
           Cybersecurity graduate student with nearly 5 years of enterprise
           experience across Windows Server &amp; Linux administration, Azure
@@ -824,56 +724,43 @@ function Hero() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
           className="mt-2 flex flex-wrap justify-center gap-4"
         >
           <a
             href="#projects"
-            className="rounded-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400 px-8 py-3.5 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20 transition-opacity hover:opacity-90"
+            className="rounded-full bg-amber-400 px-8 py-3.5 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/20 transition-all hover:-translate-y-0.5 hover:bg-amber-300"
           >
             View My Work
           </a>
           <a
             href="#contact"
-            className="rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/30 hover:text-white"
+            className="rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 transition-all hover:-translate-y-0.5 hover:border-white/30 hover:text-white"
           >
             Get In Touch
           </a>
         </motion.div>
 
         <motion.div
-          style={{ y: signalsY }}
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 0.6 }}
-          className="grid w-full max-w-2xl grid-cols-1 gap-3 pt-4 sm:grid-cols-3"
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="mt-6 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3"
         >
           {HERO_SIGNALS.map((signal) => (
             <div
               key={signal.value}
-              className="rounded-2xl border border-white/10 bg-black/24 px-4 py-3 text-left backdrop-blur-md transition-colors duration-200 hover:border-cyan-300/25"
+              className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-left transition-colors duration-200 hover:border-amber-400/25"
             >
-              <span className="font-display text-sm font-semibold text-cyan-200">
+              <span className="font-display text-sm font-semibold text-amber-200">
                 {signal.value}
               </span>
               <p className="mt-1 text-xs text-white/45">{signal.label}</p>
             </div>
           ))}
         </motion.div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
-        style={{ opacity: scrollCueOpacity }}
-        className="absolute bottom-10 flex flex-col items-center gap-2 text-white/30"
-      >
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
-        <ChevronDown className="h-4 w-4 animate-bounce" />
-      </motion.div>
       </div>
     </section>
   );
@@ -884,10 +771,10 @@ function About() {
     <Section id="about">
       <SectionHeading label="Who I Am" title="About Me" />
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
         <motion.div variants={fadeUp}>
-          <GlowCard customSize glowColor="green" className="h-auto w-full !aspect-auto p-8">
-            <div className="relative z-10 flex flex-col gap-5">
+          <Card className="h-full p-8">
+            <div className="flex h-full flex-col gap-5">
               <p className="text-base leading-relaxed text-white/80">
                 Cybersecurity graduate student at The George Washington University
                 (M.S., May 2026) with nearly 5 years of enterprise experience at
@@ -906,26 +793,20 @@ function About() {
                 Management role.
               </p>
             </div>
-          </GlowCard>
+          </Card>
         </motion.div>
 
         <motion.div variants={stagger} className="grid grid-cols-2 gap-4">
           {STATS.map((stat) => (
             <motion.div key={stat.label} variants={fadeUp}>
-              <GlowCard
-                customSize
-                glowColor="blue"
-                className="flex h-full w-full !aspect-auto flex-col items-center justify-center p-6 text-center"
-              >
-                <div className="relative z-10 flex flex-col items-center gap-1">
-                    <span className="font-display bg-gradient-to-b from-white to-amber-200 bg-clip-text text-4xl font-medium text-transparent">
-                    {stat.value}
-                  </span>
-                  <span className="text-xs uppercase leading-tight tracking-wide text-white/50">
-                    {stat.label}
-                  </span>
-                </div>
-              </GlowCard>
+              <Card className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
+                <span className="font-display text-4xl font-semibold text-amber-300">
+                  {stat.value}
+                </span>
+                <span className="text-xs uppercase leading-tight tracking-wide text-white/50">
+                  {stat.label}
+                </span>
+              </Card>
             </motion.div>
           ))}
         </motion.div>
@@ -945,30 +826,30 @@ function Education() {
       >
         {EDUCATION.map((item) => (
           <motion.div key={`${item.degree}-${item.school}`} variants={fadeUp}>
-            <GlowCard customSize glowColor="orange" className="h-full w-full !aspect-auto p-8">
-                <div className="relative z-10 flex flex-col gap-4">
-                  <div className="flex flex-col gap-2">
-                    <h3 className="font-display text-2xl font-medium text-white">{item.degree}</h3>
-                    <p className="text-sm uppercase tracking-[0.24em] text-cyan-300/80">
-                      {item.school}
-                    </p>
-                    <p className="text-sm text-white/55">{item.meta}</p>
-                  </div>
-
-                  {item.details.length > 0 ? (
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {item.details.map((detail) => (
-                        <span
-                          key={detail}
-                          className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70"
-                        >
-                          {detail}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
+            <Card className="h-full p-8">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-display text-2xl font-medium text-white">{item.degree}</h3>
+                  <p className="text-sm uppercase tracking-[0.24em] text-amber-300/80">
+                    {item.school}
+                  </p>
+                  <p className="text-sm text-white/55">{item.meta}</p>
                 </div>
-            </GlowCard>
+
+                {item.details.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {item.details.map((detail) => (
+                      <span
+                        key={detail}
+                        className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70"
+                      >
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </Card>
           </motion.div>
         ))}
       </motion.div>
@@ -982,7 +863,7 @@ function CredentialBadge({
 }: Pick<Credential, 'badge' | 'badgeStyle'>) {
   if (badgeStyle === 'azure') {
     return (
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-cyan-500/25 bg-cyan-500/8">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
         <div className="grid grid-cols-2 gap-[3px]">
           <span className="h-3.5 w-3.5 bg-[#f25022]" />
           <span className="h-3.5 w-3.5 bg-[#7fba00]" />
@@ -995,14 +876,14 @@ function CredentialBadge({
 
   if (badgeStyle === 'green') {
     return (
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/8 px-2 text-center text-sm font-semibold text-emerald-300">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-teal-400/25 bg-teal-400/10 px-2 text-center text-sm font-semibold text-teal-300">
         {badge}
       </div>
     );
   }
 
   return (
-    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/8 px-2 text-center text-sm font-semibold text-amber-300">
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/25 bg-amber-400/10 px-2 text-center text-sm font-semibold text-amber-300">
       {badge}
     </div>
   );
@@ -1017,34 +898,29 @@ function Credentials() {
           titleLines={['Backed by', 'verified learning.']}
         />
 
-        <motion.div
-          variants={stagger}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-        >
+        <motion.div variants={stagger} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {CREDENTIALS.map((credential, index) => (
-            <motion.div
-              key={`${credential.title}-${credential.level ?? credential.issuer}`}
-              variants={fadeUp}
-              className="flex items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/[0.04]"
-            >
-              <span className="font-display hidden text-xs text-white/25 sm:block">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <CredentialBadge badge={credential.badge} badgeStyle={credential.badgeStyle} />
+            <motion.div key={`${credential.title}-${credential.level ?? credential.issuer}`} variants={fadeUp}>
+              <Card className="flex items-center gap-5 p-6">
+                <span className="font-display hidden text-xs text-white/25 sm:block">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <CredentialBadge badge={credential.badge} badgeStyle={credential.badgeStyle} />
 
-              <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
-                <h3 className="font-display text-lg font-medium leading-tight text-white sm:text-xl">
-                  {credential.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-white/45">
-                  {credential.level ? `${credential.level} — ` : ''}
-                  {credential.issuer}
-                  {credential.status ? ' — ' : ''}
-                  {credential.status ? (
-                    <span className="text-cyan-300">{credential.status}</span>
-                  ) : null}
-                </p>
-              </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
+                  <h3 className="font-display text-lg font-medium leading-tight text-white sm:text-xl">
+                    {credential.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-white/45">
+                    {credential.level ? `${credential.level} — ` : ''}
+                    {credential.issuer}
+                    {credential.status ? ' — ' : ''}
+                    {credential.status ? (
+                      <span className="text-amber-300">{credential.status}</span>
+                    ) : null}
+                  </p>
+                </div>
+              </Card>
             </motion.div>
           ))}
         </motion.div>
@@ -1083,20 +959,20 @@ function Experience() {
             className="relative flex gap-5 pb-10 last:pb-0 md:gap-8"
           >
             <div className="relative flex w-6 shrink-0 flex-col items-center md:w-8">
-              <span className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center rounded-full border-2 border-cyan-300 bg-black">
-                <span className="h-1 w-1 rounded-full bg-cyan-300" />
+              <span className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center rounded-full border-2 border-amber-300 bg-[#0b1120]">
+                <span className="h-1 w-1 rounded-full bg-amber-300" />
               </span>
               {index < EXPERIENCE.length - 1 ? (
-                <span className="mt-1 w-px flex-1 bg-gradient-to-b from-cyan-300/40 via-white/10 to-transparent" />
+                <span className="mt-1 w-px flex-1 bg-gradient-to-b from-amber-300/40 via-white/10 to-transparent" />
               ) : null}
             </div>
 
-            <GlowCard customSize glowColor="green" className="w-full !aspect-auto p-8">
-              <div className="relative z-10 flex flex-col gap-5">
+            <Card className="w-full p-8">
+              <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                   <div>
                     <h3 className="font-display text-2xl font-medium text-white">{role.title}</h3>
-                    <p className="mt-1 text-sm uppercase tracking-[0.24em] text-cyan-300/80">
+                    <p className="mt-1 text-sm uppercase tracking-[0.24em] text-amber-300/80">
                       {role.organization}
                     </p>
                   </div>
@@ -1124,14 +1000,12 @@ function Experience() {
                               <h4 className="font-display text-lg font-medium text-white">
                                 {highlight.heading}
                               </h4>
-                              <span className="text-sm text-white/45">
-                                {highlight.period}
-                              </span>
+                              <span className="text-sm text-white/45">{highlight.period}</span>
                             </div>
                             <ul className="space-y-3 text-sm leading-relaxed text-white/65">
                               {highlight.bullets.map((bullet) => (
                                 <li key={bullet} className="flex gap-3">
-                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
+                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
                                   <span>{bullet}</span>
                                 </li>
                               ))}
@@ -1143,7 +1017,7 @@ function Experience() {
                   </div>
                 </details>
               </div>
-            </GlowCard>
+            </Card>
           </motion.div>
         ))}
       </motion.div>
@@ -1162,36 +1036,30 @@ function Skills() {
       >
         {SKILL_GROUPS.map(({ color, icon: Icon, skills, title }, index) => (
           <motion.div key={title} variants={fadeUp}>
-            <GlowCard
-              customSize
-              glowColor={color}
-              className="flex h-full w-full !aspect-auto flex-col gap-5 p-8"
-            >
-              <div className="relative z-10 flex flex-col gap-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
-                      <Icon className="h-5 w-5 text-cyan-300" />
-                    </div>
-                    <h3 className="font-display text-lg font-medium text-white">{title}</h3>
+            <Card className="flex h-full flex-col gap-5 p-8">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl border ${ACCENT_STYLES[color].chip}`}>
+                    <Icon className={`h-5 w-5 ${ACCENT_STYLES[color].icon}`} />
                   </div>
-                  <span className="font-display text-xs text-white/25">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
+                  <h3 className="font-display text-lg font-medium text-white">{title}</h3>
                 </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 transition-all duration-200 hover:border-cyan-500/30 hover:bg-cyan-500/5 hover:text-white"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+                <span className="font-display text-xs text-white/25">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
               </div>
-            </GlowCard>
+
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 transition-all duration-200 hover:border-white/20 hover:text-white"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </Card>
           </motion.div>
         ))}
       </motion.div>
@@ -1246,16 +1114,14 @@ function Projects() {
 
           return (
             <motion.div key={project.title} variants={fadeUp}>
-              <GlowCard
-                customSize
-                glowColor={project.color}
-                className="flex h-full w-full !aspect-auto flex-col gap-5 p-7"
-              >
-                <div className="relative z-10 flex h-full flex-col gap-4">
+              <Card className="flex h-full flex-col gap-5 p-7">
+                <div className="flex h-full flex-col gap-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/25 bg-gradient-to-br from-cyan-500/35 via-emerald-500/25 to-amber-400/25">
-                        <Icon className="h-5 w-5 text-cyan-300" />
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${ACCENT_STYLES[project.color].chip}`}
+                      >
+                        <Icon className={`h-5 w-5 ${ACCENT_STYLES[project.color].icon}`} />
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <span className="font-display text-[11px] text-white/30">
@@ -1277,14 +1143,14 @@ function Projects() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-md border border-cyan-300/20 bg-cyan-300/8 px-2.5 py-1 text-xs font-medium text-cyan-200"
+                        className={`rounded-md border px-2.5 py-1 text-xs font-medium ${ACCENT_STYLES[project.color].tag}`}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
-              </GlowCard>
+              </Card>
             </motion.div>
           );
         })}
@@ -1318,67 +1184,56 @@ function Contact() {
   ];
 
   return (
-    <Section id="contact" className="pb-16">
+    <Section id="contact" className="pb-24">
       <motion.div
-        variants={stagger}
-        className="mx-auto flex max-w-4xl flex-col items-center gap-10 text-center"
+        variants={fadeUp}
+        className="mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] border border-amber-400/20 bg-gradient-to-br from-amber-400/12 via-white/[0.02] to-transparent p-10 text-center md:p-16"
       >
-        <SectionHeadingStacked
-          label="Contact"
-          titleLines={['Got a challenge?', "I'm all ears."]}
-        />
+        <SectionHeadingStacked label="Contact" titleLines={['Got a challenge?', "I'm all ears."]} />
 
-        <motion.p
-          variants={fadeUp}
-          className="max-w-3xl text-lg leading-relaxed text-white/60"
-        >
+        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/60">
           I&apos;m currently open to new opportunities and collaborations. Whether
           you have a question, a project, or just want to say hi, my inbox is
           always open.
-        </motion.p>
+        </p>
 
-        <motion.div variants={stagger} className="flex flex-col items-center gap-4">
-          <motion.div
-            variants={fadeUp}
-            className="flex items-center justify-center gap-3 text-lg text-white/70"
-          >
-            <MapPin className="h-5 w-5 text-cyan-300" />
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center gap-3 text-lg text-white/70">
+            <MapPin className="h-5 w-5 text-amber-300" />
             <span>Arlington, Virginia</span>
-          </motion.div>
-          <motion.a
-            variants={fadeUp}
+          </div>
+          <a
             href="mailto:samantaray.chiranjib97@gmail.com"
-            className="flex items-center justify-center gap-3 text-lg text-white/70 transition-colors hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            <Mail className="h-5 w-5 text-cyan-300" />
-            <span>samantaray.chiranjib97@gmail.com</span>
-          </motion.a>
-        </motion.div>
+            <Mail className="h-4 w-4" />
+            samantaray.chiranjib97@gmail.com
+          </a>
+        </div>
 
-        <motion.div variants={stagger} className="flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           {contactLinks.map(({ href, icon: Icon, label }) => (
-            <motion.a
+            <a
               key={label}
-              variants={fadeUp}
               href={href}
               target={href.startsWith('mailto:') ? undefined : '_blank'}
               rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={label}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-cyan-400/30 hover:bg-cyan-400/8 hover:text-cyan-300"
+              className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-amber-400/30 hover:bg-amber-400/8 hover:text-amber-300"
             >
               <Icon className="h-5 w-5" />
-            </motion.a>
+            </a>
           ))}
-        </motion.div>
+        </div>
       </motion.div>
 
       <motion.div
         variants={fadeIn}
-        className="mx-auto mt-24 max-w-6xl border-t border-white/8 pt-8 text-center"
+        className="mx-auto mt-16 max-w-6xl border-t border-white/8 pt-8 text-center"
       >
         <p className="text-sm text-white/35">
-          Designed & Built by{' '}
-          <span className="font-medium text-cyan-300">Chiranjib Samantaray</span>
+          Designed &amp; Built by{' '}
+          <span className="font-medium text-amber-300">Chiranjib Samantaray</span>
         </p>
         <p className="mt-3 text-xs tracking-[0.2em] text-white/18">
           (c) 2026 All rights reserved.
@@ -1390,17 +1245,7 @@ function Contact() {
 
 export default function PortfolioPage() {
   return (
-    <main className="relative min-h-screen bg-black font-sans text-white">
-      <InteractiveNeuralVortexBackground />
-
-      <div
-        className="pointer-events-none fixed inset-0 z-[1]"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.68) 100%)',
-        }}
-      />
-
+    <main className="relative min-h-screen bg-[#0b1120] font-sans text-white">
       <ScrollProgressBar />
       <Navbar />
       <Hero />
