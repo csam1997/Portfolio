@@ -107,13 +107,6 @@ const NAV_LINKS: NavLink[] = [
   { label: 'Contact', href: '#contact' },
 ];
 
-const STATS = [
-  { value: '5+', label: 'Years Experience' },
-  { value: '11', label: 'Projects Shipped' },
-  { value: '200+', label: 'Tests Automated' },
-  { value: '4', label: 'Certifications' },
-];
-
 const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Terminal,
@@ -766,51 +759,76 @@ function Hero() {
   );
 }
 
+const ABOUT_FOCUS_AREAS = [
+  'Cloud & Systems Administration',
+  'Identity & Access Management',
+  'Infrastructure as Code',
+  'QA Automation',
+];
+
 function About() {
   return (
     <Section id="about">
       <SectionHeading label="Who I Am" title="About Me" />
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <motion.div variants={fadeUp}>
-          <Card className="h-full p-8">
-            <div className="flex h-full flex-col gap-5">
-              <p className="text-base leading-relaxed text-white/80">
-                Cybersecurity graduate student at The George Washington University
-                (M.S., May 2026) with nearly 5 years of enterprise experience at
-                Cognizant, spanning Windows Server &amp; Active Directory
-                administration, Linux, Azure infrastructure as code, identity
-                &amp; access management, and QA automation for banking and
-                financial services. Hands-on with Terraform, Bicep, PowerShell,
-                Microsoft Entra ID, RBAC, and ServiceNow ITSM.
-              </p>
+      <motion.div variants={fadeUp} className="mx-auto max-w-4xl">
+        <Card className="p-8 md:p-12">
+          <div className="flex flex-col gap-5">
+            <p className="text-base leading-relaxed text-white/80 md:text-lg">
+              I&apos;m a cybersecurity graduate student at The George Washington
+              University (M.S., May 2026), building on nearly 5 years of
+              enterprise experience at Cognizant in banking and financial
+              services. I started in manual QA, grew into automation framework
+              development, and along the way picked up a deep, hands-on
+              familiarity with the systems that automation depends on: Windows
+              Server and Active Directory, Linux, and the identity layer that
+              ties enterprise access together.
+            </p>
 
-              <p className="text-base leading-relaxed text-white/60">
-                Currently deepening my expertise in cloud security, network
-                defense, and infrastructure automation through hands-on
-                home-lab work, with the goal of transitioning into a full-time
-                Systems Engineer, Cloud Administrator, or Identity &amp; Access
-                Management role.
-              </p>
+            <p className="text-base leading-relaxed text-white/60">
+              That combination is what pulled me toward cloud and systems
+              engineering. I&apos;m comfortable moving between provisioning
+              Azure infrastructure with Terraform and Bicep, administering AD
+              DS/DNS/GPO on Windows Server, hardening and scripting on Linux,
+              and validating identity workflows &mdash; SSO, MFA, RBAC,
+              joiner-mover-leaver &mdash; end to end. QA automation taught me
+              to think in terms of evidence and repeatability, and that habit
+              now shows up in how I document, test, and roll back
+              infrastructure changes.
+            </p>
+
+            <p className="text-base leading-relaxed text-white/60">
+              Outside of coursework, I run a home lab that mirrors the
+              enterprise problems I care most about: a multi-VM Windows/Entra
+              hybrid identity environment, Terraform-provisioned Azure
+              infrastructure with CI/CD gating, Linux servers I administer and
+              monitor myself, and automation frameworks built in Playwright
+              and Selenium. It&apos;s where I test ideas before they show up
+              on a resume.
+            </p>
+
+            <p className="text-base leading-relaxed text-white/60">
+              I&apos;m currently targeting full-time Systems Engineer, Cloud
+              Administrator, IAM Analyst/Engineer, and QA Automation Engineer
+              roles &mdash; and genuinely enjoy the parts of the job most
+              people skip: reading the logs, writing the runbook, and making
+              sure the access someone has is exactly the access they should
+              have.
+            </p>
+
+            <div className="flex flex-wrap gap-2 pt-2">
+              {ABOUT_FOCUS_AREAS.map((area) => (
+                <span
+                  key={area}
+                  className="rounded-full border border-amber-400/20 bg-amber-400/8 px-3.5 py-1.5 text-xs font-medium text-amber-200"
+                >
+                  {area}
+                </span>
+              ))}
             </div>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={stagger} className="grid grid-cols-2 gap-4">
-          {STATS.map((stat) => (
-            <motion.div key={stat.label} variants={fadeUp}>
-              <Card className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
-                <span className="font-display text-4xl font-semibold text-amber-300">
-                  {stat.value}
-                </span>
-                <span className="text-xs uppercase leading-tight tracking-wide text-white/50">
-                  {stat.label}
-                </span>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+          </div>
+        </Card>
+      </motion.div>
     </Section>
   );
 }
