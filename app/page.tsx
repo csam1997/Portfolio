@@ -6,8 +6,10 @@ import { AnimatePresence, motion, useInView, useScroll, useSpring } from 'framer
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
+  ArrowUpRight,
   Camera,
   Cloud,
+  Compass,
   ExternalLink,
   FileSearch,
   FolderGit2,
@@ -32,17 +34,13 @@ type NavLink = {
   label: string;
 };
 
-type AccentColor = 'amber' | 'orange' | 'rose' | 'sky' | 'teal' | 'violet';
-
 type SkillGroup = {
-  color: AccentColor;
   icon: LucideIcon;
   skills: string[];
   title: string;
 };
 
 type Project = {
-  color: AccentColor;
   description: string;
   github?: string;
   icon: LucideIcon;
@@ -53,47 +51,10 @@ type Project = {
 
 type Credential = {
   badge: string;
-  badgeStyle: 'azure' | 'gold' | 'green';
+  badgeStyle: 'azure' | 'default';
   issuer: string;
   level?: string;
-  status?: string;
   title: string;
-};
-
-const ACCENT_STYLES: Record<
-  AccentColor,
-  { chip: string; icon: string; tag: string }
-> = {
-  amber: {
-    chip: 'border-amber-400/25 bg-amber-400/15',
-    icon: 'text-amber-300',
-    tag: 'border-amber-400/25 bg-amber-400/10 text-amber-200',
-  },
-  orange: {
-    chip: 'border-orange-400/25 bg-orange-400/15',
-    icon: 'text-orange-300',
-    tag: 'border-orange-400/25 bg-orange-400/10 text-orange-200',
-  },
-  rose: {
-    chip: 'border-rose-400/25 bg-rose-400/15',
-    icon: 'text-rose-300',
-    tag: 'border-rose-400/25 bg-rose-400/10 text-rose-200',
-  },
-  sky: {
-    chip: 'border-sky-400/25 bg-sky-400/15',
-    icon: 'text-sky-300',
-    tag: 'border-sky-400/25 bg-sky-400/10 text-sky-200',
-  },
-  teal: {
-    chip: 'border-teal-400/25 bg-teal-400/15',
-    icon: 'text-teal-300',
-    tag: 'border-teal-400/25 bg-teal-400/10 text-teal-200',
-  },
-  violet: {
-    chip: 'border-violet-400/25 bg-violet-400/15',
-    icon: 'text-violet-300',
-    tag: 'border-violet-400/25 bg-violet-400/10 text-violet-200',
-  },
 };
 
 const NAV_LINKS: NavLink[] = [
@@ -111,7 +72,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Terminal,
     title: 'Windows & Systems Administration',
-    color: 'sky',
     skills: [
       'Windows Server 2022',
       'Active Directory (AD DS)',
@@ -126,7 +86,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Server,
     title: 'Linux Administration',
-    color: 'teal',
     skills: [
       'Ubuntu / Linux',
       'SSH & sudo',
@@ -139,7 +98,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Cloud,
     title: 'Cloud & Infrastructure as Code',
-    color: 'violet',
     skills: [
       'Azure VMs, VNets & NSGs',
       'Azure RBAC & Storage Accounts',
@@ -154,7 +112,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Shield,
     title: 'Identity & Access Management',
-    color: 'amber',
     skills: [
       'Microsoft Entra ID & Entra Connect Sync',
       'Active Directory & Group-Based Access',
@@ -169,7 +126,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Workflow,
     title: 'Automation & Scripting',
-    color: 'rose',
     skills: [
       'PowerShell & Microsoft Graph PowerShell',
       'Python',
@@ -183,7 +139,6 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     icon: Activity,
     title: 'Monitoring, ITSM & Support',
-    color: 'orange',
     skills: [
       'Azure Monitor & Log Analytics (KQL)',
       'ServiceNow (Incident / Change / Problem)',
@@ -203,7 +158,6 @@ const PROJECTS: Project[] = [
     description:
       'A multi-VM Windows Server domain with a domain controller, file server, and Windows 11 client — OUs, GPOs, DNS/DHCP, and scoped Entra Connect Sync to test hybrid identity, provisioning/deprovisioning, and SSO concepts.',
     tags: ['Windows Server 2022', 'AD DS', 'GPO', 'Entra Connect Sync', 'PowerShell'],
-    color: 'sky',
   },
   {
     icon: Cloud,
@@ -211,7 +165,6 @@ const PROJECTS: Project[] = [
     description:
       'Reusable Terraform modules for resource groups, networking, VMs, storage, and Key Vault, deployed across dev/prod via workspaces with a remote backend, an OIDC-authenticated GitHub Actions pipeline, and Entra-based RBAC.',
     tags: ['Terraform', 'Azure', 'GitHub Actions', 'OIDC', 'Key Vault'],
-    color: 'violet',
   },
   {
     icon: Shield,
@@ -219,7 +172,6 @@ const PROJECTS: Project[] = [
     description:
       '10+ modeled identities with joiner-mover-leaver, contractor-expiration, and urgent-offboarding workflows validated through ServiceNow approvals, Microsoft Graph PowerShell automation, and Azure RBAC access recertification.',
     tags: ['Microsoft Entra ID', 'ServiceNow PDI', 'Graph PowerShell', 'Azure RBAC'],
-    color: 'orange',
   },
   {
     icon: Activity,
@@ -227,7 +179,6 @@ const PROJECTS: Project[] = [
     description:
       'A Bicep + PowerShell deployment of a tagged, locked Azure environment with Log Analytics alerting, KQL queries for RBAC/NSG changes and sign-in failures, and Azure Backup / Update Manager operations.',
     tags: ['Bicep', 'PowerShell', 'Azure Monitor', 'KQL', 'Azure Backup'],
-    color: 'amber',
   },
   {
     icon: Server,
@@ -235,7 +186,6 @@ const PROJECTS: Project[] = [
     description:
       'Ubuntu servers administered end to end — users, sudo, SSH keys, systemd services, UFW, Nginx, and cron — with Bash health checks and documented incident recovery for CPU, memory, disk, and service conditions.',
     tags: ['Ubuntu Server', 'SSH', 'systemd', 'Bash', 'UFW / Nginx'],
-    color: 'teal',
   },
   {
     icon: Lock,
@@ -243,7 +193,6 @@ const PROJECTS: Project[] = [
     description:
       'Applications integrated via OIDC/OAuth 2.0 and SAML SSO with group/app-role assignment and MFA, with redirect URI, claims, and token issues troubleshot and documented in a reproducible support runbook.',
     tags: ['Okta', 'OIDC / OAuth 2.0', 'SAML 2.0', 'Postman'],
-    color: 'violet',
   },
   {
     icon: Workflow,
@@ -251,15 +200,13 @@ const PROJECTS: Project[] = [
     description:
       'A full-stack tool that wires LLM APIs — Anthropic Claude, Groq, and Gemini — into a live app, applying prompt engineering and AI automation to streamline repetitive workflows.',
     tags: ['Anthropic Claude API', 'Groq', 'Gemini', 'Prompt Engineering', 'Full-Stack'],
-    color: 'rose',
   },
   {
-    icon: Lock,
+    icon: FileSearch,
     title: 'TrusLex',
     description:
       'An AI litigation dashboard that surfaces DAIL lawsuit data with state-level exploration, trend analysis, upload support, and filterable visualizations for faster legal research.',
     tags: ['Node.js', 'Express', 'XLSX', 'AI Litigation'],
-    color: 'teal',
     github: 'https://github.com/csam1997/TrusLex',
     live: 'https://csam1997.github.io/TrusLex/',
   },
@@ -269,16 +216,14 @@ const PROJECTS: Project[] = [
     description:
       'A Reboot the Earth hackathon prototype that maps nearby food distribution points, community kitchens, and meal providers on an interactive Leaflet.js map to improve food access in underserved neighborhoods.',
     tags: ['HTML / CSS', 'JavaScript', 'Leaflet.js', 'Hackathon'],
-    color: 'sky',
     github: 'https://github.com/csam1997/Meals-on-Wheels',
   },
   {
-    icon: FileSearch,
+    icon: Compass,
     title: 'AI Trip Planner',
     description:
       'A fully client-side travel planner with a 3-step wizard, Groq-powered itineraries, hotel and event recommendations, Google Maps and Flights links, exchange rates, and PNG trip export.',
     tags: ['HTML', 'CSS', 'JavaScript', 'Groq API', 'html2canvas'],
-    color: 'amber',
     github: 'https://github.com/SakethBandlapalli/Ai_Trip_Planner',
     live: 'https://sakethbandlapalli.github.io/Ai_Trip_Planner/',
   },
@@ -388,7 +333,7 @@ const CREDENTIALS: Credential[] = [
   },
   {
     badge: 'CTTC',
-    badgeStyle: 'gold',
+    badgeStyle: 'default',
     title: 'PLC & SCADA',
     issuer: 'MSME, Govt. of India',
     level: 'CTTC',
@@ -465,34 +410,42 @@ const OFF_SCREEN: BentoMediaItem[] = [
   },
 ];
 
-const HERO_SIGNALS = [
-  { value: 'Cloud & Systems', label: 'Azure, Windows Server, and Linux administration' },
-  { value: 'Identity & Access', label: 'Entra ID, Active Directory, RBAC, SSO/MFA' },
-  { value: 'Automation & IaC', label: 'PowerShell, Python, Terraform, and Bicep' },
+const HERO_STATUS: { label: string; value: string }[] = [
+  { label: 'role', value: 'Systems Engineer' },
+  { label: 'stack', value: 'Azure · Windows Server · Linux' },
+  { label: 'focus', value: 'Identity & Access Mgmt' },
+  { label: 'location', value: 'Arlington, VA' },
+];
+
+const ABOUT_FOCUS_AREAS = [
+  'Cloud & Systems Administration',
+  'Identity & Access Management',
+  'Infrastructure as Code',
+  'Automation & Scripting',
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as const },
   },
 };
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.6 } },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
 function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={`rounded-3xl border border-white/8 bg-white/[0.035] shadow-[0_24px_60px_-32px_rgba(0,0,0,0.7)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/14 hover:bg-white/[0.055] hover:shadow-[0_32px_75px_-28px_rgba(0,0,0,0.75)] ${className}`}
+      className={`rounded-xl border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.04] ${className}`}
     >
       {children}
     </div>
@@ -518,49 +471,32 @@ function Section({
       variants={stagger}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
-      className={`relative px-6 py-20 md:px-10 lg:px-16 ${className}`}
+      className={`relative mx-auto max-w-6xl px-6 py-20 md:px-10 lg:px-16 ${className}`}
     >
       {children}
     </motion.section>
   );
 }
 
-function SectionHeading({ label, title }: { label: string; title: string }) {
-  return (
-    <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
-      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-300">
-        <span className="h-1 w-1 rounded-full bg-amber-300" />
-        {label}
-      </span>
-      <h2 className="font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
-        {title}
-      </h2>
-    </motion.div>
-  );
-}
-
-function SectionHeadingStacked({
-  label,
-  titleLines,
+function SectionHeading({
+  kicker,
+  title,
+  description,
 }: {
-  label: string;
-  titleLines: string[];
+  kicker: string;
+  title: string;
+  description?: string;
 }) {
   return (
-    <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
-      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-300">
-        <span className="h-1 w-1 rounded-full bg-amber-300" />
-        {label}
+    <motion.div variants={fadeUp} className="mb-10 flex max-w-2xl flex-col gap-3 text-left">
+      <span className="flex items-center gap-2 font-mono text-xs tracking-wide text-sky-300/80">
+        <span className="h-1.5 w-1.5 rounded-[2px] bg-sky-400" aria-hidden="true" />
+        {kicker}
       </span>
-      <h2 className="font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
-        {titleLines.map((line, index) => (
-          <span key={`${label}-${line}`} className="block">
-            <span className={index === titleLines.length - 1 ? 'text-white/30' : ''}>
-              {line}
-            </span>
-          </span>
-        ))}
-      </h2>
+      <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">{title}</h2>
+      {description ? (
+        <p className="text-[15px] leading-relaxed text-white/55">{description}</p>
+      ) : null}
     </motion.div>
   );
 }
@@ -570,17 +506,15 @@ function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -80, opacity: 0 }}
+      initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-[#0b1120]/80 px-6 py-4 backdrop-blur-xl md:px-10"
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-[#0a0f14]/85 px-6 py-4 backdrop-blur-md md:px-10"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 font-display text-sm font-bold text-slate-950">
-            C
-          </span>
-          <span className="font-display text-base font-semibold tracking-tight text-white">
+          <span className="h-2 w-2 rounded-[2px] bg-sky-400" aria-hidden="true" />
+          <span className="text-[15px] font-semibold tracking-tight text-white">
             Chiranjib Samantaray
           </span>
         </a>
@@ -590,7 +524,7 @@ function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="rounded-full px-3.5 py-2 text-sm tracking-wide text-white/55 transition-colors duration-200 hover:bg-white/5 hover:text-white"
+                className="rounded-md px-3.5 py-2 text-sm text-white/55 transition-colors duration-200 hover:bg-white/5 hover:text-white"
               >
                 {link.label}
               </a>
@@ -599,16 +533,16 @@ function Navbar() {
           <li className="ml-2">
             <a
               href="#contact"
-              className="rounded-full bg-amber-400 px-5 py-2 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-amber-300"
+              className="rounded-md border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-sm font-medium text-sky-200 transition-colors duration-200 hover:border-sky-400/50 hover:bg-sky-400/15"
             >
-              Hire Me
+              Contact
             </a>
           </li>
         </ul>
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:text-white lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:text-white lg:hidden"
           onClick={() => setIsOpen((current) => !current)}
           aria-expanded={isOpen}
           aria-label="Toggle menu"
@@ -620,17 +554,17 @@ function Navbar() {
       <AnimatePresence>
         {isOpen ? (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mt-4 flex flex-col gap-4 rounded-2xl border border-white/10 bg-[#0b1120]/95 px-6 py-6 backdrop-blur-xl lg:hidden"
+            exit={{ opacity: 0, y: -16 }}
+            className="mt-4 flex flex-col gap-1 rounded-xl border border-white/10 bg-[#0a0f14]/95 px-4 py-4 backdrop-blur-xl lg:hidden"
           >
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="border-b border-white/5 py-2 text-sm text-white/70 transition-colors hover:text-white"
+                className="rounded-md px-3 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white"
               >
                 {link.label}
               </a>
@@ -638,9 +572,9 @@ function Navbar() {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="rounded-full bg-amber-400 px-5 py-2 text-center text-sm font-semibold text-slate-950"
+              className="mt-1 rounded-md border border-sky-400/30 bg-sky-400/10 px-3 py-2.5 text-center text-sm font-medium text-sky-200"
             >
-              Hire Me
+              Contact
             </a>
           </motion.div>
         ) : null}
@@ -659,7 +593,7 @@ function ScrollProgressBar() {
 
   return (
     <motion.div
-      className="fixed left-0 right-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400"
+      className="fixed left-0 right-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-sky-400 via-sky-300 to-cyan-200"
       style={{ scaleX }}
       aria-hidden="true"
     />
@@ -669,169 +603,173 @@ function ScrollProgressBar() {
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden px-6 pb-24 pt-40 md:px-10 lg:px-16">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-32 h-[30rem] w-[30rem] rounded-full bg-amber-400/10 blur-[110px]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -left-24 h-[26rem] w-[26rem] rounded-full bg-rose-400/8 blur-[110px]"
-      />
-
-      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-xs font-medium uppercase tracking-widest text-amber-200"
-        >
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-300" />
-          Available for work
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-          className="font-display text-5xl font-semibold leading-[1.04] tracking-tight text-white md:text-7xl"
-        >
-          Chiranjib <span className="text-amber-300">Samantaray</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-lg font-medium text-white/70 md:text-xl"
-        >
-          Automating systems. Securing identity.
-        </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="max-w-2xl text-base leading-relaxed text-white/55 md:text-lg"
-        >
-          Systems Engineer with 4.5 years of enterprise experience across
-          Windows Server &amp; Linux administration, Azure cloud
-          infrastructure, and identity &amp; access management for financial
-          services and insurance clients, plus an M.S. in Computer Science
-          (Cybersecurity) from The George Washington University. Targeting
-          Systems Engineer, Cloud Administrator, and IAM Engineer roles.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-2 flex flex-wrap justify-center gap-4"
-        >
-          <a
-            href="#projects"
-            className="rounded-full bg-amber-400 px-8 py-3.5 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/20 transition-all hover:-translate-y-0.5 hover:bg-amber-300"
+      <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-start gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="flex flex-col items-start gap-6 text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-2 font-mono text-xs text-amber-300/90"
           >
-            View My Work
-          </a>
-          <a
-            href="#contact"
-            className="rounded-full border border-white/15 px-8 py-3.5 text-sm font-semibold text-white/80 transition-all hover:-translate-y-0.5 hover:border-white/30 hover:text-white"
-          >
-            Get In Touch
-          </a>
-        </motion.div>
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
+            </span>
+            available for work
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="mt-6 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3"
-        >
-          {HERO_SIGNALS.map((signal) => (
-            <div
-              key={signal.value}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 text-left transition-colors duration-200 hover:border-amber-400/25"
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08, duration: 0.55 }}
+            className="text-5xl font-semibold leading-[1.05] tracking-tight text-white md:text-6xl xl:text-7xl"
+          >
+            Chiranjib Samantaray
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.16, duration: 0.5 }}
+            className="text-lg font-medium text-sky-200/90 md:text-xl"
+          >
+            Systems Engineer — Windows, Linux &amp; Azure Administration
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.24, duration: 0.5 }}
+            className="max-w-xl text-base leading-relaxed text-white/55"
+          >
+            4.5 years administering hybrid Windows Server, Linux, and Azure
+            production environments for financial services and insurance
+            clients, plus an M.S. in Computer Science (Cybersecurity) from
+            The George Washington University. Targeting Systems Engineer,
+            Cloud Administrator, and IAM Engineer roles.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32, duration: 0.5 }}
+            className="mt-2 flex flex-wrap items-center gap-3"
+          >
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-1.5 rounded-md bg-sky-400 px-6 py-3 text-sm font-semibold text-[#0a0f14] transition-colors hover:bg-sky-300"
             >
-              <span className="font-display text-sm font-semibold text-amber-200">
-                {signal.value}
-              </span>
-              <p className="mt-1 text-xs text-white/45">{signal.label}</p>
+              View my work
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+            <a
+              href="#contact"
+              className="rounded-md border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition-colors hover:border-white/30 hover:text-white"
+            >
+              Get in touch
+            </a>
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.55 }}
+          className="w-full"
+        >
+          <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] font-mono text-[13px]">
+            <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
+              <span className="h-2 w-2 rounded-full bg-white/15" />
+              <span className="h-2 w-2 rounded-full bg-white/15" />
+              <span className="h-2 w-2 rounded-full bg-white/15" />
+              <span className="ml-2 text-white/35">status</span>
             </div>
-          ))}
+            <dl className="flex flex-col divide-y divide-white/8">
+              {HERO_STATUS.map((row) => (
+                <div key={row.label} className="flex items-center justify-between gap-4 px-4 py-3.5">
+                  <dt className="text-white/35">{row.label}</dt>
+                  <dd className="text-right text-white/85">{row.value}</dd>
+                </div>
+              ))}
+              <div className="flex items-center justify-between gap-4 px-4 py-3.5">
+                <dt className="text-white/35">availability</dt>
+                <dd className="flex items-center gap-1.5 text-emerald-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  open to offers
+                </dd>
+              </div>
+            </dl>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-const ABOUT_FOCUS_AREAS = [
-  'Cloud & Systems Administration',
-  'Identity & Access Management',
-  'Infrastructure as Code',
-  'Automation & Scripting',
-];
-
 function About() {
   return (
     <Section id="about">
-      <SectionHeading label="Who I Am" title="About Me" />
+      <SectionHeading kicker="who i am" title="About me" />
 
-      <motion.div variants={fadeUp} className="mx-auto max-w-4xl">
-        <Card className="p-8 md:p-12">
-          <div className="flex flex-col gap-5">
-            <p className="text-base leading-relaxed text-white/80 md:text-lg">
-              I&apos;m a Systems Engineer with 4.5 years at Cognizant supporting
-              production environments for financial services and insurance
-              clients, and a 2026 M.S. in Computer Science (Cybersecurity)
-              from The George Washington University. I started on the L1
-              support desk &mdash; SLA-driven tickets, Windows and access
-              issues, IIS/SQL Server/SharePoint health checks &mdash; and moved
-              into systems engineering: administering Windows Server and Linux
-              infrastructure, patching and change management, and the identity
-              layer that ties enterprise access together.
-            </p>
+      <motion.div
+        variants={fadeUp}
+        className="grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr]"
+      >
+        <div className="flex flex-col gap-5">
+          <p className="text-base leading-relaxed text-white/80">
+            I&apos;m a Systems Engineer with 4.5 years at Cognizant supporting
+            production environments for financial services and insurance
+            clients, and a 2026 M.S. in Computer Science (Cybersecurity) from
+            The George Washington University. I started on the L1 support
+            desk &mdash; SLA-driven tickets, Windows and access issues,
+            IIS/SQL Server/SharePoint health checks &mdash; and moved into
+            systems engineering: administering Windows Server and Linux
+            infrastructure, patching and change management, and the identity
+            layer that ties enterprise access together.
+          </p>
 
-            <p className="text-base leading-relaxed text-white/60">
-              That combination is what pulled me toward cloud and identity
-              work. I&apos;m comfortable moving between provisioning Azure
-              infrastructure with Terraform and Bicep, administering AD
-              DS/DNS/GPO on Windows Server, hardening and scripting on Linux,
-              and running identity workflows &mdash; SSO, MFA, RBAC,
-              joiner-mover-leaver &mdash; end to end. Years in an SLA-driven
-              queue taught me to think in terms of evidence and repeatability,
-              and that habit shows up in how I document, test, and roll back
-              infrastructure changes.
-            </p>
+          <p className="text-base leading-relaxed text-white/60">
+            That combination is what pulled me toward cloud and identity
+            work. I&apos;m comfortable moving between provisioning Azure
+            infrastructure with Terraform and Bicep, administering AD
+            DS/DNS/GPO on Windows Server, hardening and scripting on Linux,
+            and running identity workflows &mdash; SSO, MFA, RBAC,
+            joiner-mover-leaver &mdash; end to end. Years in an SLA-driven
+            queue taught me to think in terms of evidence and repeatability,
+            and that habit shows up in how I document, test, and roll back
+            infrastructure changes.
+          </p>
 
-            <p className="text-base leading-relaxed text-white/60">
-              Outside of work, I run a home lab that mirrors the enterprise
-              problems I care most about: a multi-VM Windows/Entra hybrid
-              identity environment, Terraform-provisioned Azure infrastructure
-              with CI/CD gating, Linux servers I administer and monitor myself,
-              and PowerShell and Python automation for the repetitive parts.
-              It&apos;s where I test ideas before they show up on a resume.
-            </p>
+          <p className="text-base leading-relaxed text-white/60">
+            Outside of work, I run a home lab that mirrors the enterprise
+            problems I care most about: a multi-VM Windows/Entra hybrid
+            identity environment, Terraform-provisioned Azure infrastructure
+            with CI/CD gating, Linux servers I administer and monitor
+            myself, and PowerShell and Python automation for the repetitive
+            parts. It&apos;s where I test ideas before they show up on a
+            resume.
+          </p>
 
-            <p className="text-base leading-relaxed text-white/60">
-              I&apos;m currently targeting full-time Systems Engineer, Cloud
-              Administrator, and IAM Engineer roles &mdash; and enjoy the parts
-              of the job most people skip: reading the logs, writing the
-              runbook, and making sure the access someone has is exactly the
-              access they should have.
-            </p>
+          <p className="text-base leading-relaxed text-white/60">
+            I&apos;m currently targeting full-time Systems Engineer, Cloud
+            Administrator, and IAM Engineer roles &mdash; and enjoy the
+            parts of the job most people skip: reading the logs, writing the
+            runbook, and making sure the access someone has is exactly the
+            access they should have.
+          </p>
+        </div>
 
-            <div className="flex flex-wrap gap-2 pt-2">
-              {ABOUT_FOCUS_AREAS.map((area) => (
-                <span
-                  key={area}
-                  className="rounded-full border border-amber-400/20 bg-amber-400/8 px-3.5 py-1.5 text-xs font-medium text-amber-200"
-                >
-                  {area}
-                </span>
-              ))}
+        <div className="flex flex-col gap-3">
+          {ABOUT_FOCUS_AREAS.map((area) => (
+            <div
+              key={area}
+              className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3.5"
+            >
+              <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-sky-400" />
+              <span className="text-sm text-white/75">{area}</span>
             </div>
-          </div>
-        </Card>
+          ))}
+        </div>
       </motion.div>
     </Section>
   );
@@ -840,36 +778,77 @@ function About() {
 function Education() {
   return (
     <Section id="education">
-      <SectionHeading label="Education" title="The foundation behind it all." />
+      <SectionHeading kicker="education" title="Academic background" />
 
-      <motion.div
-        variants={stagger}
-        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-2"
-      >
+      <motion.div variants={stagger} className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {EDUCATION.map((item) => (
           <motion.div key={`${item.degree}-${item.school}`} variants={fadeUp}>
-            <Card className="h-full p-8">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-display text-2xl font-medium text-white">{item.degree}</h3>
-                  <p className="text-sm uppercase tracking-[0.24em] text-amber-300/80">
-                    {item.school}
-                  </p>
-                  <p className="text-sm text-white/55">{item.meta}</p>
-                </div>
+            <Card className="flex h-full flex-col gap-4 p-7">
+              <div className="flex flex-col gap-1.5">
+                <h3 className="text-xl font-medium text-white">{item.degree}</h3>
+                <p className="text-sm text-sky-300/80">{item.school}</p>
+                <p className="font-mono text-xs text-white/40">{item.meta}</p>
+              </div>
 
-                {item.details.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {item.details.map((detail) => (
-                      <span
-                        key={detail}
-                        className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70"
-                      >
-                        {detail}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
+              {item.details.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5 border-t border-white/8 pt-4">
+                  {item.details.map((detail) => (
+                    <span
+                      key={detail}
+                      className="rounded-md border border-white/8 px-2.5 py-1 font-mono text-[11px] text-white/55"
+                    >
+                      {detail}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
+    </Section>
+  );
+}
+
+function CredentialBadge({ badge, badgeStyle }: Pick<Credential, 'badge' | 'badgeStyle'>) {
+  if (badgeStyle === 'azure') {
+    return (
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
+        <div className="grid grid-cols-2 gap-[3px]">
+          <span className="h-3 w-3 bg-[#f25022]" />
+          <span className="h-3 w-3 bg-[#7fba00]" />
+          <span className="h-3 w-3 bg-[#00a4ef]" />
+          <span className="h-3 w-3 bg-[#ffb900]" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] font-mono text-[11px] font-semibold text-sky-300">
+      {badge}
+    </div>
+  );
+}
+
+function Credentials() {
+  return (
+    <Section id="credentials">
+      <SectionHeading kicker="credentials" title="Certifications & training" />
+
+      <motion.div variants={stagger} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {CREDENTIALS.map((credential) => (
+          <motion.div key={`${credential.title}-${credential.level ?? credential.issuer}`} variants={fadeUp}>
+            <Card className="flex items-center gap-4 p-5">
+              <CredentialBadge badge={credential.badge} badgeStyle={credential.badgeStyle} />
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-left">
+                <h3 className="text-[15px] font-medium leading-tight text-white">
+                  {credential.title}
+                </h3>
+                <p className="font-mono text-xs text-white/40">
+                  {credential.level ? `${credential.level} — ` : ''}
+                  {credential.issuer}
+                </p>
               </div>
             </Card>
           </motion.div>
@@ -879,90 +858,12 @@ function Education() {
   );
 }
 
-function CredentialBadge({
-  badge,
-  badgeStyle,
-}: Pick<Credential, 'badge' | 'badgeStyle'>) {
-  if (badgeStyle === 'azure') {
-    return (
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-        <div className="grid grid-cols-2 gap-[3px]">
-          <span className="h-3.5 w-3.5 bg-[#f25022]" />
-          <span className="h-3.5 w-3.5 bg-[#7fba00]" />
-          <span className="h-3.5 w-3.5 bg-[#00a4ef]" />
-          <span className="h-3.5 w-3.5 bg-[#ffb900]" />
-        </div>
-      </div>
-    );
-  }
-
-  if (badgeStyle === 'green') {
-    return (
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-teal-400/25 bg-teal-400/10 px-2 text-center text-sm font-semibold text-teal-300">
-        {badge}
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/25 bg-amber-400/10 px-2 text-center text-sm font-semibold text-amber-300">
-      {badge}
-    </div>
-  );
-}
-
-function Credentials() {
-  return (
-    <Section id="credentials">
-      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col gap-12">
-        <SectionHeadingStacked
-          label="Credentials"
-          titleLines={['Backed by', 'verified learning.']}
-        />
-
-        <motion.div variants={stagger} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {CREDENTIALS.map((credential, index) => (
-            <motion.div key={`${credential.title}-${credential.level ?? credential.issuer}`} variants={fadeUp}>
-              <Card className="flex items-center gap-5 p-6">
-                <span className="font-display hidden text-xs text-white/25 sm:block">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <CredentialBadge badge={credential.badge} badgeStyle={credential.badgeStyle} />
-
-                <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
-                  <h3 className="font-display text-lg font-medium leading-tight text-white sm:text-xl">
-                    {credential.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-white/45">
-                    {credential.level ? `${credential.level} — ` : ''}
-                    {credential.issuer}
-                    {credential.status ? ' — ' : ''}
-                    {credential.status ? (
-                      <span className="text-amber-300">{credential.status}</span>
-                    ) : null}
-                  </p>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </Section>
-  );
-}
-
 function OffScreen() {
   return (
     <Section id="off-screen">
-      <motion.div variants={stagger} className="mx-auto flex max-w-7xl flex-col gap-12">
-        <SectionHeadingStacked
-          label="Off Screen"
-          titleLines={['When I step away', 'from the screen.']}
-        />
-
-        <motion.div variants={fadeUp}>
-          <InteractiveBentoGallery mediaItems={OFF_SCREEN} enableInteractions={false} />
-        </motion.div>
+      <SectionHeading kicker="off screen" title="Outside of work" />
+      <motion.div variants={fadeUp}>
+        <InteractiveBentoGallery mediaItems={OFF_SCREEN} enableInteractions={false} />
       </motion.div>
     </Section>
   );
@@ -971,73 +872,75 @@ function OffScreen() {
 function Experience() {
   return (
     <Section id="experience">
-      <SectionHeading label="Journey" title="Where I got the opportunity." />
+      <SectionHeading kicker="journey" title="Where I've worked" />
 
-      <motion.div variants={stagger} className="mx-auto flex max-w-6xl flex-col">
+      <motion.div variants={stagger} className="flex flex-col">
         {EXPERIENCE.map((role, index) => (
           <motion.div
             key={`${role.title}-${role.period}`}
             variants={fadeUp}
-            className="relative flex gap-5 pb-10 last:pb-0 md:gap-8"
+            className="relative flex gap-6 pb-10 last:pb-0"
           >
-            <div className="relative flex w-6 shrink-0 flex-col items-center md:w-8">
-              <span className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center rounded-full border-2 border-amber-300 bg-[#0b1120]">
-                <span className="h-1 w-1 rounded-full bg-amber-300" />
-              </span>
+            <div className="relative flex w-4 shrink-0 flex-col items-center pt-2">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-sm border-2 border-sky-400 bg-[#0a0f14]" />
               {index < EXPERIENCE.length - 1 ? (
-                <span className="mt-1 w-px flex-1 bg-gradient-to-b from-amber-300/40 via-white/10 to-transparent" />
+                <span className="mt-1 w-px flex-1 bg-white/10" />
               ) : null}
             </div>
 
-            <Card className="w-full p-8">
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <Card className="w-full p-7">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5 md:flex-row md:items-start md:justify-between">
                   <div>
-                    <h3 className="font-display text-2xl font-medium text-white">{role.title}</h3>
-                    <p className="mt-1 text-sm uppercase tracking-[0.24em] text-amber-300/80">
-                      {role.organization}
-                    </p>
+                    <h3 className="text-xl font-medium text-white">{role.title}</h3>
+                    <p className="mt-0.5 text-sm text-sky-300/80">{role.organization}</p>
                   </div>
-                  <span className="text-sm font-medium text-white/55">{role.period}</span>
+                  <span className="font-mono text-xs text-white/40">{role.period}</span>
                 </div>
 
-                <details className="group rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4">
-                  <summary className="cursor-pointer list-none text-sm font-medium text-white/75 transition-colors group-open:text-white">
-                    View details
-                  </summary>
+                <p className="max-w-3xl text-[15px] leading-relaxed text-white/65">
+                  {role.summary}
+                </p>
 
-                  <div className="mt-4 flex flex-col gap-6">
-                    <p className="max-w-4xl text-base leading-relaxed text-white/75">
-                      {role.summary}
-                    </p>
+                {role.highlights.length > 0 ? (
+                  <details className="group rounded-lg border border-white/10 bg-white/[0.02] px-5 py-4 open:bg-white/[0.03]">
+                    <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-white/70 transition-colors group-open:text-white">
+                      Role details
+                      <span className="font-mono text-xs text-white/30 group-open:hidden">+</span>
+                      <span className="hidden font-mono text-xs text-white/30 group-open:inline">
+                        −
+                      </span>
+                    </summary>
 
-                    {role.highlights.length > 0 ? (
-                      <div className="flex flex-col gap-6 pt-1">
-                        {role.highlights.map((highlight) => (
-                          <div
-                            key={`${highlight.heading}-${highlight.period}`}
-                            className="flex flex-col gap-3"
-                          >
-                            <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                              <h4 className="font-display text-lg font-medium text-white">
-                                {highlight.heading}
-                              </h4>
-                              <span className="text-sm text-white/45">{highlight.period}</span>
-                            </div>
-                            <ul className="space-y-3 text-sm leading-relaxed text-white/65">
-                              {highlight.bullets.map((bullet) => (
-                                <li key={bullet} className="flex gap-3">
-                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
-                                  <span>{bullet}</span>
-                                </li>
-                              ))}
-                            </ul>
+                    <div className="mt-4 flex flex-col gap-6">
+                      {role.highlights.map((highlight) => (
+                        <div
+                          key={`${highlight.heading}-${highlight.period}`}
+                          className="flex flex-col gap-3"
+                        >
+                          <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+                            <h4 className="text-[15px] font-medium text-white">
+                              {highlight.heading}
+                            </h4>
+                            {highlight.period ? (
+                              <span className="font-mono text-xs text-white/35">
+                                {highlight.period}
+                              </span>
+                            ) : null}
                           </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </details>
+                          <ul className="space-y-2.5 text-sm leading-relaxed text-white/65">
+                            {highlight.bullets.map((bullet) => (
+                              <li key={bullet} className="flex gap-3">
+                                <span className="mt-2 h-1 w-1 shrink-0 rounded-[1px] bg-sky-400/70" />
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                ) : null}
               </div>
             </Card>
           </motion.div>
@@ -1050,32 +953,27 @@ function Experience() {
 function Skills() {
   return (
     <Section id="skills">
-      <SectionHeading label="Technical Skills" title="What I work with daily." />
+      <SectionHeading kicker="technical skills" title="What I work with" />
 
       <motion.div
         variants={stagger}
-        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+        className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
       >
-        {SKILL_GROUPS.map(({ color, icon: Icon, skills, title }, index) => (
+        {SKILL_GROUPS.map(({ icon: Icon, skills, title }) => (
           <motion.div key={title} variants={fadeUp}>
-            <Card className="flex h-full flex-col gap-5 p-8">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl border ${ACCENT_STYLES[color].chip}`}>
-                    <Icon className={`h-5 w-5 ${ACCENT_STYLES[color].icon}`} />
-                  </div>
-                  <h3 className="font-display text-lg font-medium text-white">{title}</h3>
+            <Card className="flex h-full flex-col gap-4 p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.03]">
+                  <Icon className="h-4 w-4 text-sky-300" />
                 </div>
-                <span className="font-display text-xs text-white/25">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+                <h3 className="text-[15px] font-medium text-white">{title}</h3>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {skills.map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-lg border border-white/8 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 transition-all duration-200 hover:border-white/20 hover:text-white"
+                    className="rounded-md border border-white/8 px-2.5 py-1 font-mono text-[11px] text-white/60 transition-colors duration-200 hover:border-white/20 hover:text-white/90"
                   >
                     {skill}
                   </span>
@@ -1095,14 +993,14 @@ function ProjectLinks({ github, live }: { github?: string; live?: string }) {
   }
 
   return (
-    <div className="flex shrink-0 items-center gap-2">
+    <div className="flex shrink-0 items-center gap-3">
       {github ? (
         <a
           href={github}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white/40 transition-colors hover:text-white"
-          aria-label="GitHub"
+          className="text-white/35 transition-colors hover:text-white"
+          aria-label="GitHub repository"
         >
           <FolderGit2 className="h-4 w-4" />
         </a>
@@ -1112,7 +1010,7 @@ function ProjectLinks({ github, live }: { github?: string; live?: string }) {
           href={live}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-white/40 transition-colors hover:text-white"
+          className="text-white/35 transition-colors hover:text-white"
           aria-label="Live demo"
         >
           <ExternalLink className="h-4 w-4" />
@@ -1125,52 +1023,42 @@ function ProjectLinks({ github, live }: { github?: string; live?: string }) {
 function Projects() {
   return (
     <Section id="projects">
-      <SectionHeading label="Work" title="Featured Projects" />
+      <SectionHeading kicker="work" title="Featured projects" />
 
       <motion.div
         variants={stagger}
-        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+        className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
       >
-        {PROJECTS.map((project, index) => {
+        {PROJECTS.map((project) => {
           const Icon = project.icon;
 
           return (
             <motion.div key={project.title} variants={fadeUp}>
-              <Card className="flex h-full flex-col gap-5 p-7">
-                <div className="flex h-full flex-col gap-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${ACCENT_STYLES[project.color].chip}`}
-                      >
-                        <Icon className={`h-5 w-5 ${ACCENT_STYLES[project.color].icon}`} />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-display text-[11px] text-white/30">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <h3 className="font-display text-lg font-medium leading-snug text-white">
-                          {project.title}
-                        </h3>
-                      </div>
-                    </div>
-                    <ProjectLinks github={project.github} live={project.live} />
+              <Card className="flex h-full flex-col gap-4 p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/[0.03]">
+                    <Icon className="h-4 w-4 text-sky-300" />
                   </div>
+                  <ProjectLinks github={project.github} live={project.live} />
+                </div>
 
-                  <p className="flex-1 text-sm leading-relaxed text-white/60">
-                    {project.description}
-                  </p>
+                <h3 className="text-[15px] font-medium leading-snug text-white">
+                  {project.title}
+                </h3>
 
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className={`rounded-md border px-2.5 py-1 text-xs font-medium ${ACCENT_STYLES[project.color].tag}`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                <p className="flex-1 text-sm leading-relaxed text-white/55">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-1.5 border-t border-white/8 pt-4">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md border border-white/8 px-2 py-0.5 font-mono text-[10.5px] text-white/50"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </Card>
             </motion.div>
@@ -1209,31 +1097,38 @@ function Contact() {
     <Section id="contact" className="pb-24">
       <motion.div
         variants={fadeUp}
-        className="mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] border border-amber-400/20 bg-gradient-to-br from-amber-400/12 via-white/[0.02] to-transparent p-10 text-center md:p-16"
+        className="rounded-2xl border border-white/10 bg-white/[0.02] p-10 md:p-14"
       >
-        <SectionHeadingStacked label="Contact" titleLines={['Got a challenge?', "I'm all ears."]} />
+        <div className="flex flex-col gap-3">
+          <span className="flex items-center gap-2 font-mono text-xs tracking-wide text-sky-300/80">
+            <span className="h-1.5 w-1.5 rounded-[2px] bg-sky-400" />
+            contact
+          </span>
+          <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+            Let&apos;s talk
+          </h2>
+          <p className="max-w-xl text-[15px] leading-relaxed text-white/55">
+            I&apos;m currently open to new opportunities and collaborations.
+            Whether you have a question, a role in mind, or just want to say
+            hi, my inbox is always open.
+          </p>
+        </div>
 
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/60">
-          I&apos;m currently open to new opportunities and collaborations. Whether
-          you have a question, a project, or just want to say hi, my inbox is
-          always open.
-        </p>
-
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <div className="flex items-center justify-center gap-3 text-lg text-white/70">
-            <MapPin className="h-5 w-5 text-amber-300" />
-            <span>Arlington, Virginia</span>
-          </div>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
           <a
             href="mailto:samantaray.chiranjib97@gmail.com"
-            className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-amber-300"
+            className="inline-flex items-center gap-2 rounded-md bg-sky-400 px-6 py-3 text-sm font-semibold text-[#0a0f14] transition-colors hover:bg-sky-300"
           >
             <Mail className="h-4 w-4" />
             samantaray.chiranjib97@gmail.com
           </a>
+          <div className="flex items-center gap-2 font-mono text-sm text-white/50">
+            <MapPin className="h-4 w-4 text-white/35" />
+            Arlington, Virginia
+          </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-white/8 pt-8">
           {contactLinks.map(({ href, icon: Icon, label }) => (
             <a
               key={label}
@@ -1241,24 +1136,21 @@ function Contact() {
               target={href.startsWith('mailto:') ? undefined : '_blank'}
               rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={label}
-              className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-white/55 transition-all duration-200 hover:border-amber-400/30 hover:bg-amber-400/8 hover:text-amber-300"
+              className="flex h-11 w-11 items-center justify-center rounded-md border border-white/10 bg-white/[0.02] text-white/55 transition-colors duration-200 hover:border-sky-400/30 hover:text-sky-300"
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-4 w-4" />
             </a>
           ))}
         </div>
       </motion.div>
 
-      <motion.div
-        variants={fadeIn}
-        className="mx-auto mt-16 max-w-6xl border-t border-white/8 pt-8 text-center"
-      >
-        <p className="text-sm text-white/35">
-          Designed &amp; Built by{' '}
-          <span className="font-medium text-amber-300">Chiranjib Samantaray</span>
+      <motion.div variants={fadeIn} className="mt-14 border-t border-white/8 pt-8 text-center">
+        <p className="font-mono text-xs text-white/35">
+          Designed &amp; built by{' '}
+          <span className="text-sky-300/80">Chiranjib Samantaray</span>
         </p>
-        <p className="mt-3 text-xs tracking-[0.2em] text-white/18">
-          (c) 2026 All rights reserved.
+        <p className="mt-2 font-mono text-[10px] tracking-wide text-white/18">
+          © 2026 all rights reserved.
         </p>
       </motion.div>
     </Section>
@@ -1267,7 +1159,7 @@ function Contact() {
 
 export default function PortfolioPage() {
   return (
-    <main className="relative min-h-screen bg-[#0b1120] font-sans text-white">
+    <main className="relative min-h-screen bg-[#0a0f14] font-sans text-white">
       <ScrollProgressBar />
       <Navbar />
       <Hero />

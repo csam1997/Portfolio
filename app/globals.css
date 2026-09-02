@@ -12,18 +12,21 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 88px;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse 60% 40% at 12% -8%, rgba(251, 191, 36, 0.12), transparent 55%),
-    radial-gradient(ellipse 55% 38% at 100% 4%, rgba(251, 113, 133, 0.08), transparent 52%),
-    radial-gradient(ellipse 50% 32% at 50% 100%, rgba(45, 212, 191, 0.06), transparent 55%),
-    #0b1120;
-  color: #f7f5f2;
+  background-color: #0a0f14;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    radial-gradient(ellipse 60% 42% at 50% -8%, rgba(56, 189, 248, 0.09), transparent 60%);
+  background-size: 48px 48px, 48px 48px, 100% 100%;
+  background-position: -1px -1px, -1px -1px, 0 0;
+  background-attachment: fixed, fixed, fixed;
+  color: #eaf0f5;
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
   text-rendering: geometricPrecision;
@@ -35,8 +38,8 @@ a {
 }
 
 ::selection {
-  background: rgba(251, 191, 36, 0.32);
-  color: #0b1120;
+  background: rgba(56, 189, 248, 0.28);
+  color: #0a0f14;
 }
 
 @media (prefers-reduced-motion: reduce) {

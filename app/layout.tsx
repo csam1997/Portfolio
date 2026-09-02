@@ -1,18 +1,28 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
+const plexSans = localFont({
+  src: [
+    { path: './fonts/ibm-plex-sans-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/ibm-plex-sans-500.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/ibm-plex-sans-600.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/ibm-plex-sans-700.woff2', weight: '700', style: 'normal' },
+  ],
   variable: '--font-sans',
+  display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-display',
+const plexMono = localFont({
+  src: [
+    { path: './fonts/ibm-plex-mono-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/ibm-plex-mono-500.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/ibm-plex-mono-600.woff2', weight: '600', style: 'normal' },
+  ],
+  variable: '--font-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -27,7 +37,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   );
