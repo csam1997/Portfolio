@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Chiranjib Samantaray — Cloud, Systems & Identity Portfolio',
   description:
-    'Portfolio of Chiranjib Samantaray: Azure cloud administration, Windows/Linux systems engineering, identity & access management (IAM), and QA automation.',
+    'Portfolio of Chiranjib Samantaray: Windows/Linux systems engineering, Azure cloud administration, identity & access management (IAM), and infrastructure automation.',
 };
 
 export default function RootLayout({
